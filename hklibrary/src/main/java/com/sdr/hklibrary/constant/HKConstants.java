@@ -110,4 +110,24 @@ public interface HKConstants {
         int ZOOM_IN = 7;
         int ZOOM_OUT = 8;
     }
+
+    interface PlayStatus {
+        // 定义当前视频的播放状态
+        /**
+         * 初始化阶段
+         */
+        int LIVE_INIT = 0;
+        /**
+         * 取流阶段
+         */
+        int LIVE_STREAM = 1;
+        /**
+         * 播放阶段
+         */
+        int LIVE_PLAY = 2;
+        /**
+         * 释放资源阶段
+         */
+        int LIVE_RELEASE = 3;
+    }
 }

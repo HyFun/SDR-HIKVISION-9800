@@ -120,9 +120,9 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
         if (mainRecyclerAdapter == null || cameraInfoList != null) {
             List<HKItemControl> itemList = new ArrayList<>();
             for (int i = 0; i < num * num; i++) {
-                itemList.add(new HKItemControl());
+                itemList.add(new HKItemControl(i, mainRecyclerAdapter));
             }
-            mainRecyclerAdapter = new HKMainRecyclerAdapter(R.layout.hk_layout_hkvideo_main_recycler_item, itemList);
+            mainRecyclerAdapter = new HKMainRecyclerAdapter(R.layout.hk_layout_hkvideo_main_recycler_item, itemList, this, treeNodeList);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), num);
             rvHkMain.setLayoutManager(gridLayoutManager);
             rvHkMain.setAdapter(mainRecyclerAdapter);
@@ -133,7 +133,7 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
                 // 少 变  多
                 int addCount = (num * num) - (currentViewNum * currentViewNum);
                 for (int i = 0; i < addCount; i++) {
-                    mainRecyclerAdapter.addData(new HKItemControl());
+                    mainRecyclerAdapter.addData(new HKItemControl(i + (currentViewNum * currentViewNum), mainRecyclerAdapter));
                 }
             } else {
                 // 多 变 少
