@@ -1,9 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.sdr.hklibrary.ui.HKVideoMainActivity">
+    android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.sdr.lib.widget.SquareFramLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/hk_video_main_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.sdr.lib.widget.SquareFramLayout>
+
+        <RadioGroup
+            android:id="@+id/hk_video_main_rg_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <com.sdr.hklibrary.widget.HKSRButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@mipmap/hk_window_1"
+                android:backgroundTint="?colorPrimary"
+                android:button="@null"
+                app:backgroundTint="?colorPrimary" />
+
+            <com.sdr.hklibrary.widget.HKSRButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@mipmap/hk_window_4"
+                android:backgroundTint="?colorPrimary"
+                android:button="@null"
+                app:backgroundTint="?colorPrimary" />
+
+            <com.sdr.hklibrary.widget.HKSRButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@mipmap/hk_window_9"
+                android:backgroundTint="?colorPrimary"
+                android:button="@null"
+                app:backgroundTint="?colorPrimary" />
+
+            <com.sdr.hklibrary.widget.HKSRButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@mipmap/hk_window_16"
+                android:backgroundTint="?colorPrimary"
+                android:button="@null"
+                app:backgroundTint="?colorPrimary" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/hk_video_main_iv_history"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="5dp"
+                android:src="@mipmap/hk_window_history"
+                android:tint="?colorPrimary" />
+
+            <ImageView
+                android:id="@+id/hk_video_main_iv_zoom_out"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/hk_ic_zoom_out_black_24dp"
+                android:tint="?colorPrimary" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="提示：长按可关闭正在播放中的视频"
+            android:textSize="14sp" />
+    </LinearLayout>
+</ScrollView>

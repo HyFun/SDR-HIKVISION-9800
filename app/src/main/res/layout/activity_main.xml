@@ -1,18 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sdr.hkvideo.MainActivity">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:padding="10dp"
+        android:text="url"
+        android:textColor="@color/colorPrimary" />
 
-</android.support.constraint.ConstraintLayout>
+    <EditText
+        android:id="@+id/main_edt_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="60.191.94.170:8086" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="账号"
+        android:textColor="@color/colorPrimary" />
+
+    <EditText
+        android:id="@+id/main_edt_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="admin" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="密码"
+        android:textColor="@color/colorPrimary" />
+
+    <EditText
+        android:id="@+id/main_edt_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hik12345" />
+
+    <Button
+        android:id="@+id/main_btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="登录" />
+</LinearLayout>
+

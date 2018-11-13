@@ -21,9 +21,6 @@ public interface HKMainContract {
     }
 
     interface Presenter extends AbstractPresenter<View> {
-//        void login(String url, String userName, String passWord, String macAddr, ServInfo servInfo);
-//
-//        void getCameraList(String url, ServInfo servInfo);
         void init(String url, String userName, String passWord, String macAddr, ServInfo servInfo);
     }
 }
