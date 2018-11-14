@@ -13,15 +13,17 @@ import io.reactivex.observers.ResourceObserver;
 
 public interface HKPlayContract {
     interface View {
-        void playLiveFailed(int position,String message);
-
-        void stopPlayComplete(int position,String message);
-
+        //        void playLiveFailed(int position,String message);
+//
+//        void stopPlayComplete(int position,String message);
+//
         void showLoadingDialog(String message);
 
         void hideLoadingDialog();
 
-//        void showErrorMessage(String message);
+
+        void onPlayMsg(int position, int code, String msg);
+
     }
 
     interface Presenter {
@@ -30,5 +32,9 @@ public interface HKPlayContract {
         void stopPlay();
 
         void stopPlaySyn();
+
+        void sendCtrlCmd(int gestureID);
+
+        void stopControl();
     }
 }

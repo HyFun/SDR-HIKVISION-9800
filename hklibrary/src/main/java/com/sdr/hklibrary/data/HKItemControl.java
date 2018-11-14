@@ -96,11 +96,11 @@ public class HKItemControl implements HKPlayContract.Presenter,
     @Override
     public void startPlay(String cameraID, SurfaceView surfaceView) {
         if (TextUtils.isEmpty(cameraID)) {
-            view.playLiveFailed(getPosition(), "cameraID不能为空");
+            view.onPlayMsg(position, HKConstants.PlayLive.PLAY_CAMERA_INFO_ID_NULL, "cameraInfo中的id为空");
             return;
         }
         if (surfaceView == null) {
-            view.playLiveFailed(getPosition(), "surfaceView不能为空");
+            view.onPlayMsg(position, HKConstants.PlayLive.PLAY_SURFACEVIEW_NULL, "surfaceView为空");
             return;
         }
         this.mCameraID = cameraID;
@@ -161,9 +161,9 @@ public class HKItemControl implements HKPlayContract.Presenter,
                 })
                 .compose(RxUtils.io_main())
                 .subscribe(ret -> {
-
+                    view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_RTSP_SUCCESS, "取流成功");
                 }, error -> {
-                    view.playLiveFailed(getPosition(), error.getMessage());
+                    view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_RTSP_FAIL, error.getMessage());
                     view.hideLoadingDialog();
                 }, () -> {
                     view.hideLoadingDialog();
@@ -193,11 +193,10 @@ public class HKItemControl implements HKPlayContract.Presenter,
                 })
                 .compose(RxUtils.io_main())
                 .subscribe(ret -> {
+                    view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_STOP_SUCCESS, "停止播放成功");
                 }, error -> {
-                    view.stopPlayComplete(getPosition(), error.getMessage());
                     view.hideLoadingDialog();
                 }, () -> {
-                    view.stopPlayComplete(getPosition(), "关闭成功");
                     view.hideLoadingDialog();
                 });
     }
@@ -212,6 +211,77 @@ public class HKItemControl implements HKPlayContract.Presenter,
         stopRtsp();
         closePlayer();
         currentStatus = HKConstants.PlayStatus.LIVE_INIT;
+    }
+
+    @Override
+    public void sendCtrlCmd(int gestureID) {
+        view.showLoadingDialog("长在执行命令");
+        Observable.just(0)
+                .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(Integer integer) throws Exception {
+                        String sessionID = HKDataInfo.getInstance().getServInfo().getSessionID();
+                        // 云台控制速度 取值范围(1-10)
+                        int speed = 5;
+                        // 发送控制命令
+                        boolean ret =
+                                VMSNetSDK.getInstance().sendStartPTZCmd(mCameraInfoEx.getAcsIP(),
+                                        mCameraInfoEx.getAcsPort(),
+                                        sessionID,
+                                        mCameraID,
+                                        gestureID,
+                                        speed,
+                                        600, mCameraInfoEx.getCascadeFlag() + "");
+                        Logger.d(HKConstants.HK_TAG + "sendStartPTZCmd ret:" + ret);
+                        if (!ret) {
+                            return Observable.error(new Exception("指令执行失败"));
+                        }
+                        return observer -> {
+                            observer.onNext(ret);
+                            observer.onComplete();
+                        };
+                    }
+                })
+                .compose(RxUtils.io_main())
+                .subscribe(ret -> {
+                    view.hideLoadingDialog();
+                    view.onPlayMsg(position, HKConstants.PlayLive.SEND_CTRL_CMD_SUCCESS, "指令执行成功");
+                }, error -> {
+                    view.hideLoadingDialog();
+                    view.onPlayMsg(position, HKConstants.PlayLive.SEND_CTRL_CMD_FAILED, error.getMessage());
+                });
+    }
+
+    @Override
+    public void stopControl() {
+        view.showLoadingDialog("正在停止指令");
+        Observable.just(0)
+                .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(Integer integer) throws Exception {
+                        String sessionID = HKDataInfo.getInstance().getServInfo().getSessionID();
+                        boolean ret =
+                                VMSNetSDK.getInstance().sendStopPTZCmd(mCameraInfoEx.getAcsIP(),
+                                        mCameraInfoEx.getAcsPort(),
+                                        sessionID,
+                                        mCameraID, mCameraInfoEx.getCascadeFlag() + "");
+                        Logger.d(HKConstants.HK_TAG + "stopPtzCmd sent,ret:" + ret);
+                        if (!ret) {
+                            return Observable.error(new Exception("停止控制失败"));
+                        }
+                        return observer -> {
+                            observer.onNext(ret);
+                            observer.onComplete();
+                        };
+                    }
+                }).compose(RxUtils.io_main())
+                .subscribe(ret -> {
+                    view.onPlayMsg(position, HKConstants.PlayLive.STOP_CONTROL_SUCCESS, "停止控制成功");
+                    view.hideLoadingDialog();
+                }, error -> {
+                    view.onPlayMsg(position, HKConstants.PlayLive.STOP_CONTROL_FAILED, "停止控制失败");
+                    view.hideLoadingDialog();
+                });
     }
 
     // ————————————————————接口——————————————————————
@@ -233,7 +303,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
             case RtspClient.DATATYPE_HEADER:
                 boolean ret = processStreamHeader(data, length);
                 if (!ret) {
-                    view.playLiveFailed(getPosition(), "播放失败");
+                    view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_FAILED, "启动播放失败");
                 } else {
                     Logger.t(HKConstants.HK_TAG).d("MediaPlayer Header success!");
                 }
@@ -272,6 +342,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
     public void onDisplay(int i, byte[] bytes, int i1, int i2, int i3, int i4, int i5, int i6) {
         if (HKConstants.PlayStatus.LIVE_PLAY != currentStatus) {
             currentStatus = HKConstants.PlayStatus.LIVE_PLAY;
+            view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_SUCCESS, "播放成功");
         }
     }
 
@@ -297,7 +368,8 @@ public class HKItemControl implements HKPlayContract.Presenter,
     }
 
     /**
-     *  获取 cameraID
+     * 获取 cameraID
+     *
      * @return
      */
     public String getCameraID() {

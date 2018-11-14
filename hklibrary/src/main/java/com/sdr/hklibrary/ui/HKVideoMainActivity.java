@@ -104,6 +104,20 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
                         });
             }
         });
+
+        // 点击放大的时候
+        ivZoomOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mainRecyclerAdapter.getSelectedPosition() != -1 && mainRecyclerAdapter.getData().get(mainRecyclerAdapter.getSelectedPosition()).getCurrentStatus() !=
+                        HKConstants.PlayStatus.LIVE_INIT) {
+                    // 正在播放的时候才方法
+                    HKVideoControlActivity.startHKVideoControlActivity(getActivity(), mainRecyclerAdapter.getData().get(mainRecyclerAdapter.getSelectedPosition()).getCameraID());
+                } else {
+                    showErrorMsg("请选择一个正在播放的窗口");
+                }
+            }
+        });
     }
 
     @Override

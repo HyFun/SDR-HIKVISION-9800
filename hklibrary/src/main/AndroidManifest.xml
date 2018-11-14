@@ -3,8 +3,10 @@
     package="com.sdr.hklibrary">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application>
-        <activity android:name=".ui.HKVideoMainActivity"></activity>
+        <activity android:name=".ui.HKVideoMainActivity" />
+        <activity android:name=".ui.HKVideoControlActivity"></activity>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.hikvision.vmsnetsdk.CameraInfo;
 import com.sdr.hklibrary.R;
+import com.sdr.hklibrary.constant.HKConstants;
 import com.sdr.hklibrary.contract.HKPlayContract;
 import com.sdr.hklibrary.data.HKHistory;
 import com.sdr.hklibrary.data.HKItemControl;
@@ -108,30 +109,6 @@ public class HKMainRecyclerAdapter extends BaseQuickAdapter<HKItemControl, BaseV
         }
     }
 
-
-    @Override
-    public void playLiveFailed(int position, String message) {
-        view.showErrorMsg(message);
-        SurfaceView surfaceView = (SurfaceView) getViewByPosition(position, R.id.hk_video_main_item_sv);
-        ImageView imageView = (ImageView) getViewByPosition(position, R.id.hk_video_main_item_iv_add);
-        surfaceView.setVisibility(View.GONE);
-        imageView.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * 关闭实时播放完成
-     *
-     * @param position
-     * @param message
-     */
-    @Override
-    public void stopPlayComplete(int position, String message) {
-        SurfaceView surfaceView = (SurfaceView) getViewByPosition(position, R.id.hk_video_main_item_sv);
-        ImageView imageView = (ImageView) getViewByPosition(position, R.id.hk_video_main_item_iv_add);
-        surfaceView.setVisibility(View.GONE);
-        imageView.setVisibility(View.VISIBLE);
-    }
-
     @Override
     public void showLoadingDialog(String message) {
         view.showLoadingDialog(message);
@@ -140,5 +117,31 @@ public class HKMainRecyclerAdapter extends BaseQuickAdapter<HKItemControl, BaseV
     @Override
     public void hideLoadingDialog() {
         view.hideLoadingDialog();
+    }
+
+    @Override
+    public void onPlayMsg(int position, int code, String msg) {
+        SurfaceView surfaceView = (SurfaceView) getViewByPosition(position, R.id.hk_video_main_item_sv);
+        ImageView imageView = (ImageView) getViewByPosition(position, R.id.hk_video_main_item_iv_add);
+        if (surfaceView == null || imageView == null) return;
+        if (code == HKConstants.PlayLive.PLAY_LIVE_RTSP_SUCCESS) {
+            // 取流成功
+            surfaceView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.GONE);
+        } else if (code == HKConstants.PlayLive.PLAY_LIVE_STOP_SUCCESS) {
+            // 停止成功
+            surfaceView.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+        } else if (code == HKConstants.PlayLive.PLAY_LIVE_FAILED || code == HKConstants.PlayLive.PLAY_LIVE_RTSP_FAIL) {
+            surfaceView.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+            // 播放失败
+            view.showErrorMsg("第" + (position + 1) + "个位置" + msg);
+        }
+    }
+
+
+    public int getSelectedPosition(){
+        return lastClickPosition;
     }
 }

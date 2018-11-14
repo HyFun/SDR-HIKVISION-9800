@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.sdr.lib.widget.SquareFramLayout
+        android:id="@+id/hk_video_control_sfl_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <SurfaceView
+            android:id="@+id/hk_video_control_surfaceview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.sdr.lib.widget.SquareFramLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TableLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_left_top"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackground"
+                    android:src="@mipmap/hk_control_left_top"
+                    android:tint="@color/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_top"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackground"
+                    android:src="@mipmap/hk_control_top"
+                    android:tint="@color/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_right_top"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackground"
+                    android:src="@mipmap/hk_control_right_top"
+                    android:tint="@color/colorPrimary" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_left"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackground"
+                    android:src="@mipmap/hk_control_left"
+                    android:tint="@color/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_middle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackground"
+                    android:src="@mipmap/hk_control_middle"
+                    android:tint="@color/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_right"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackground"
+                    android:src="@mipmap/hk_control_right"
+                    android:tint="@color/colorPrimary" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_left_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackground"
+                    android:src="@mipmap/hk_control_left_bottom"
+                    android:tint="@color/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackground"
+                    android:src="@mipmap/hk_control_bottom"
+                    android:tint="@color/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_right_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?selectableItemBackground"
+                    android:src="@mipmap/hk_control_right_bottom"
+                    android:tint="@color/colorPrimary" />
+            </TableRow>
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+            <TableRow
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_near"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="?selectableItemBackground"
+                    android:padding="10dp"
+                    android:tint="@color/colorPrimary"
+                    android:src="@mipmap/hk_control_near"/>
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_far"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="?selectableItemBackground"
+                    android:padding="10dp"
+                    android:tint="@color/colorPrimary"
+                    android:src="@mipmap/hk_control_far"/>
+            </TableRow>
+
+            <TableRow
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_zoom_in"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="?selectableItemBackground"
+                    android:tint="@color/colorPrimary"
+                    android:padding="10dp"
+                    android:src="@mipmap/hk_control_zoom_in"/>
+                <ImageView
+                    android:id="@+id/hk_video_control_iv_zoom_out"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="?selectableItemBackground"
+                    android:tint="@color/colorPrimary"
+                    android:padding="10dp"
+                    android:src="@mipmap/hk_control_zoom_out"/>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</LinearLayout>
