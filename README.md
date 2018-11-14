@@ -16,7 +16,7 @@ allprojects {
 ```
 module
 ```
-
+implementation 'com.github.HyfSunshine:SDRHKVideoLibrary:1.0.0'
 ```
 
 ## 注意
