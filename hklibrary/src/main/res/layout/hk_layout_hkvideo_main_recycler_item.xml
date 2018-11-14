@@ -24,11 +24,5 @@
             android:src="@drawable/hk_ic_add_black_24dp"
             android:tint="#cccccc" />
 
-        <ProgressBar
-            android:id="@+id/hk_video_main_item_progress"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="30dp"
-            android:visibility="gone" />
     </FrameLayout>
 </com.sdr.lib.widget.SquareFramLayout>

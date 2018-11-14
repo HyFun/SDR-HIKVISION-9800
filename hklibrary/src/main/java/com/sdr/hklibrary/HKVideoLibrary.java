@@ -112,7 +112,6 @@ public class HKVideoLibrary {
                     })
                     .compose(RxUtils.io_main())
                     .subscribe(result -> {
-                        ToastTopUtil.showCorrectTopToast("海康视频库文件加载成功");
                         startMain(context, url, userName, passWord);
                         loadJNI = true;
                     }, error -> {

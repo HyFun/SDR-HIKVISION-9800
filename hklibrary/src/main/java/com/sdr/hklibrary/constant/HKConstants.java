@@ -8,6 +8,7 @@ package com.sdr.hklibrary.constant;
 
 public interface HKConstants {
     String HK_TAG = "海康视频TAG";
+    String HIK_HISTORY = "HIK_HISTORY";
 
     interface Resource {
         /**
