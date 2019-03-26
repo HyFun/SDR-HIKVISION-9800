@@ -16,6 +16,7 @@ import com.hikvision.vmsnetsdk.netLayer.msp.deviceInfo.DeviceInfo;
 import com.orhanobut.logger.Logger;
 import com.sdr.hklibrary.constant.HKConstants;
 import com.sdr.hklibrary.contract.HKPlayContract;
+import com.sdr.hklibrary.util.UtilSDCard;
 import com.sdr.lib.rx.RxUtils;
 import com.sdr.lib.util.HttpUtil;
 
@@ -30,6 +31,8 @@ import java.nio.ByteBuffer;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
+
+import static com.sdr.hklibrary.constant.HKConstants.PlayStatus.LIVE_PLAY;
 
 /**
  * Created by HyFun on 2018/11/13.
@@ -71,6 +74,11 @@ public class HKItemControl implements HKPlayContract.Presenter,
      * 数据流
      */
     private ByteBuffer mStreamHeadDataBuffer;
+
+    /**
+     * 抓图文件
+     */
+    private File mPictureFile;
     /**
      * 录像文件
      */
@@ -133,7 +141,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
                             // 说明获取设备详细信息失败
                             return Observable.error(new Exception("获取设备详细信息失败!"));
                         }
-                        String url = getPlayUrl(HKConstants.PlayLive.SUB_STREAM, cameraInfoEx, deviceInfo);
+                        String url = getPlayUrl(HKConstants.PlayLive.MAIN_STREAM, cameraInfoEx, deviceInfo);
                         String userName = mName;
                         String passWord = mPassword;
 
@@ -215,7 +223,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
 
     @Override
     public void sendCtrlCmd(int gestureID) {
-        view.showLoadingDialog("长在执行命令");
+        view.showLoadingDialog("正在执行命令");
         Observable.just(0)
                 .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
                     @Override
@@ -284,6 +292,395 @@ public class HKItemControl implements HKPlayContract.Presenter,
                 });
     }
 
+
+    /**
+     * 抓拍 void
+     *
+     * @param filePath 存放文件路径
+     * @param picName  抓拍时文件的名称
+     * @return true-抓拍成功，false-抓拍失败
+     * @since V1.0
+     */
+    public boolean capture(String filePath, String picName) {
+        if (!UtilSDCard.isSDCardUsable()) {
+            return false;
+        }
+
+        if (LIVE_PLAY != currentStatus) {
+            view.onPlayMsg(position, HKConstants.PlayLive.CAPTURE_FAILED, "没有检测到正在播放");
+            return false;
+        }
+
+        byte[] pictureBuffer = getPictureOnJPEG();
+        if (null == pictureBuffer || pictureBuffer.length == 0) {
+            return false;
+        }
+
+        boolean ret = createPictureFile(filePath, picName);
+        if (!ret) {
+            pictureBuffer = null;
+            return false;
+        }
+
+        ret = writePictureToFile(pictureBuffer, pictureBuffer.length);
+        if (!ret) {
+            pictureBuffer = null;
+            removePictureFile();
+            view.onPlayMsg(position, HKConstants.PlayLive.CAPTURE_FAILED, "抓图失败");
+            return false;
+        }
+        view.onPlayMsg(position, HKConstants.PlayLive.CAPTURE_SUCCESS, mPictureFile.getAbsolutePath());
+        return true;
+    }
+
+    /**
+     * 获取JPEG图片数据
+     *
+     * @return JPEG图片的数据.
+     * @since V1.0
+     */
+    private byte[] getPictureOnJPEG() {
+        if (null == mPlayerHandler) {
+            return new byte[0];
+        }
+
+        if (-1 == mPlayerPort) {
+            return new byte[0];
+        }
+
+        int picSize = getPictureSize();
+        if (picSize <= 0) {
+            return new byte[0];
+        }
+
+        byte[] pictureBuffer = null;
+        try {
+            pictureBuffer = new byte[picSize];
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            pictureBuffer = null;
+            return new byte[0];
+        }
+
+        Player.MPInteger jpgSize = new Player.MPInteger();
+
+        boolean ret = mPlayerHandler.getJPEG(mPlayerPort, pictureBuffer, picSize, jpgSize);
+        if (!ret) {
+            return new byte[0];
+        }
+
+        int jpegSize = jpgSize.value;
+        if (jpegSize <= 0) {
+            pictureBuffer = null;
+            return new byte[0];
+        }
+
+        ByteBuffer jpgBuffer = ByteBuffer.wrap(pictureBuffer, 0, jpegSize);
+        if (null == jpgBuffer) {
+            pictureBuffer = null;
+            return new byte[0];
+        }
+
+        return jpgBuffer.array();
+    }
+
+    /**
+     * 获取JPEG图片大小
+     *
+     * @return JPEG图片的大小.
+     * @since V1.0
+     */
+    private int getPictureSize() {
+        Player.MPInteger width = new Player.MPInteger();
+        Player.MPInteger height = new Player.MPInteger();
+        boolean ret = mPlayerHandler.getPictureSize(mPlayerPort, width, height);
+        if (!ret) {
+            return 0;
+        }
+        int pictureSize = width.value * height.value * 3;
+        return pictureSize;
+    }
+
+
+    /**
+     * 创建图片文件
+     *
+     * @param path     图片路径
+     * @param fileName 图片名字
+     * @return true - 图片创建成功 or false - 图片创建失败
+     * @since V1.0
+     */
+    private boolean createPictureFile(String path, String fileName) {
+        if (null == path || null == fileName || path.equals("") || fileName.equals("")) {
+            return false;
+        }
+
+        String dirPath = createFileDir(path);
+        if (null == dirPath || dirPath.equals("")) {
+            return false;
+        }
+
+        try {
+            mPictureFile = new File(dirPath + File.separator + fileName);
+            if ((null != mPictureFile) && (!mPictureFile.exists())) {
+                mPictureFile.createNewFile();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mPictureFile = null;
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 创建文件夹
+     *
+     * @param path 文件路径
+     * @return 文件夹路径
+     * @since V1.0
+     */
+    private String createFileDir(String path) {
+        if (null == path || path.equals("")) {
+            return "";
+        }
+        File tempFile = null;
+        try {
+            tempFile = new File(path);
+            if ((null != tempFile) && (!tempFile.exists())) {
+                tempFile.mkdir();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return tempFile.getAbsolutePath();
+    }
+
+    /**
+     * 抓拍图片写到SDCard
+     *
+     * @param picData 图片数据
+     * @param length  图片数据长度
+     * @since V1.0
+     */
+    private boolean writePictureToFile(byte[] picData, int length) {
+        if (null == picData || length <= 0) {
+            return false;
+        }
+
+        if (null == mPictureFile) {
+            return false;
+        }
+
+        FileOutputStream fOut = null;
+        try {
+            if (!mPictureFile.exists()) {
+                mPictureFile.createNewFile();
+            }
+            fOut = new FileOutputStream(mPictureFile);
+            fOut.write(picData, 0, length);
+            fOut.flush();
+            fOut.close();
+            fOut = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            fOut = null;
+            mPictureFile.delete();
+            mPictureFile = null;
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 删除图片文件
+     *
+     * @since V1.0
+     */
+    private void removePictureFile() {
+        try {
+            if (null == mPictureFile) {
+                return;
+            }
+            mPictureFile.delete();
+            mPictureFile = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 启动录像方法
+     *
+     * @param filePath 录像文件路径
+     * @param fileName 录像文件名称
+     * @return true-启动录像成功，false-启动录像失败
+     * @since V1.0
+     */
+    public boolean startRecord(String filePath, String fileName) {
+
+        if (LIVE_PLAY != currentStatus) {
+            view.onPlayMsg(position, HKConstants.PlayLive.RECORD_FAILED, "非播放状态不能录像");
+            return false;
+        }
+
+        boolean ret = createRecordFile(filePath, fileName);
+        if (!ret) {
+            view.onPlayMsg(position, HKConstants.PlayLive.RECORD_FAILED, "创建录像文件失败");
+            return false;
+        }
+
+        ret = writeStreamHead(mRecordFile);
+        if (!ret) {
+            view.onPlayMsg(position, HKConstants.PlayLive.RECORD_FAILED, "写文件失败");
+            removeRecordFile();
+            return false;
+        }
+
+        mIsRecord = true;
+        view.onPlayMsg(position, HKConstants.PlayLive.RECORD_START, "开始录像");
+        return true;
+    }
+
+
+    /**
+     * 创建录像文件
+     *
+     * @param path     文件路径
+     * @param fileName 文件名
+     * @return true - 创建成功 or false - 创建失败
+     * @since V1.0
+     */
+    private boolean createRecordFile(String path, String fileName) {
+        if (null == path || path.equals("") || null == fileName || fileName.equals("")) {
+            return false;
+        }
+
+        try {
+            mRecordFile = new File(path + File.separator + fileName);
+            if ((null != mRecordFile) && (!mRecordFile.exists())) {
+                mRecordFile.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            mRecordFile = null;
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * 写流头文件
+     *
+     * @param file 写入的文件
+     * @return true - 写入头文件成功. false - 写入头文件失败.
+     * @since V1.0
+     */
+    private boolean writeStreamHead(File file) {
+        if (null == file || null == mStreamHeadDataBuffer) {
+            return false;
+        }
+
+        byte[] tempByte = mStreamHeadDataBuffer.array();
+        if (null == tempByte) {
+            return false;
+        }
+        try {
+            if (null == mRecordFileOutputStream) {
+                mRecordFileOutputStream = new FileOutputStream(file);
+            }
+            mRecordFileOutputStream.write(tempByte, 0, tempByte.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (mRecordFileOutputStream != null) {
+                try {
+                    mRecordFileOutputStream.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+            mRecordFileOutputStream = null;
+            mStreamHeadDataBuffer = null;
+            tempByte = null;
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 删除录像文件
+     *
+     * @since V1.0
+     */
+    private void removeRecordFile() {
+        try {
+            if (null == mRecordFile) {
+                return;
+            }
+            mRecordFile.delete();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            mRecordFile = null;
+        }
+    }
+
+
+    /**
+     * 开启音频
+     *
+     * @return boolean
+     * @since V1.0
+     */
+    public boolean startAudio() {
+        if (LIVE_PLAY != currentStatus) {
+            view.onPlayMsg(position, HKConstants.PlayLive.AUDIO_FAILED, "非播放状态不能开启音频");
+            return false;
+        }
+
+        if (null == mPlayerHandler) {
+            return false;
+        }
+
+        boolean ret = mPlayerHandler.playSound(mPlayerPort);
+        if (!ret) {
+            view.onPlayMsg(position, HKConstants.PlayLive.AUDIO_FAILED, "开启声音失败");
+            return false;
+        }
+        view.onPlayMsg(position, HKConstants.PlayLive.AUDIO_SUCCESS, "开启声音成功");
+        return true;
+    }
+
+    /**
+     * 关闭音频
+     *
+     * @return boolean
+     * @since V1.0
+     */
+    public boolean stopAudio() {
+        if (LIVE_PLAY != currentStatus) {
+            view.onPlayMsg(position, HKConstants.PlayLive.AUDIO_FAILED, "非播放状态不能关闭音频");
+            return false;
+        }
+
+        if (null == mPlayerHandler) {
+            return false;
+        }
+
+        boolean ret = mPlayerHandler.stopSound();
+        if (!ret) {
+            return false;
+        }
+        view.onPlayMsg(position, HKConstants.PlayLive.AUDIO_CLOSE_SUCCESS, "关闭声音成功");
+        return true;
+    }
     // ————————————————————接口——————————————————————
 
 
@@ -340,8 +737,8 @@ public class HKItemControl implements HKPlayContract.Presenter,
 
     @Override
     public void onDisplay(int i, byte[] bytes, int i1, int i2, int i3, int i4, int i5, int i6) {
-        if (HKConstants.PlayStatus.LIVE_PLAY != currentStatus) {
-            currentStatus = HKConstants.PlayStatus.LIVE_PLAY;
+        if (LIVE_PLAY != currentStatus) {
+            currentStatus = LIVE_PLAY;
             view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_SUCCESS, "播放成功");
         }
     }
@@ -634,9 +1031,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
         if (!mIsRecord) {
             return;
         }
-
         mIsRecord = false;
-
         stopWriteStreamData();
     }
 
@@ -660,6 +1055,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
             mRecordFile = null;
             mStreamRate = 0;
         }
+        view.onPlayMsg(position, HKConstants.PlayLive.RECORD_SUCCESS, mRecordFile.getAbsolutePath());
     }
 
 

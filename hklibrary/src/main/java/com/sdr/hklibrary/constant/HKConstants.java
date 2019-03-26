@@ -93,6 +93,49 @@ public interface HKConstants {
          * 停止控制失败
          */
         int STOP_CONTROL_FAILED = 211;
+
+
+        /**
+         * 抓拍失败
+         */
+        int CAPTURE_FAILED = 212;
+
+        /**
+         * 抓拍成功
+         */
+        int CAPTURE_SUCCESS = 213;
+
+        /**
+         * 录像失败
+         */
+        int RECORD_FAILED = 214;
+
+        /**
+         * 开始录像
+         */
+
+        int RECORD_START = 216;
+
+        /**
+         * 录像成功
+         */
+        int RECORD_SUCCESS = 215;
+
+        /**
+         *  开启声音失败
+         */
+        int AUDIO_FAILED = 217;
+
+        /**
+         *  开启声音成功
+         */
+        int AUDIO_SUCCESS = 218;
+
+        /**
+         *  关闭声音成功
+         */
+        int AUDIO_CLOSE_SUCCESS = 219;
+
     }
 
     interface Control {

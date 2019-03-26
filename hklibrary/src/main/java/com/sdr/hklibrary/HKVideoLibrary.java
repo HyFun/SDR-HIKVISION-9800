@@ -115,7 +115,7 @@ public class HKVideoLibrary {
                         startMain(context, url, userName, passWord);
                         loadJNI = true;
                     }, error -> {
-                        Logger.e(error.getMessage(), error);
+                        Logger.e(error, error.getMessage());
                         ToastTopUtil.showErrorTopToast("海康视频库文件加载失败");
                     });
         }

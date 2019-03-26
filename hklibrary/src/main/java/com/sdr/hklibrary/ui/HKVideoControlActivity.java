@@ -2,6 +2,7 @@ package com.sdr.hklibrary.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.SurfaceView;
@@ -17,6 +18,8 @@ import com.sdr.hklibrary.contract.HKPlayContract;
 import com.sdr.hklibrary.data.HKItemControl;
 import com.sdr.lib.rx.RxUtils;
 import com.sdr.lib.widget.SquareFramLayout;
+
+import java.io.File;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -185,6 +188,16 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
             @Override
             public void onClick(View v) {
                 mHKItemControl.stopControl();
+//                new RxPermissions(getActivity())
+//                        .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+//                        .subscribe(new Consumer<Boolean>() {
+//                            @Override
+//                            public void accept(Boolean aBoolean) throws Exception {
+//                                if (aBoolean) {
+//                                    mHKItemControl.capture(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), UUID.randomUUID() + ".jpg");
+//                                }
+//                            }
+//                        });
             }
         });
     }
@@ -247,10 +260,27 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
             showErrorMsg(msg);
         } else if (code == HKConstants.PlayLive.SEND_CTRL_CMD_SUCCESS) {
             // 指令执行成功
-            showErrorToast(msg);
+            showSuccessToast(msg);
         } else if (code == HKConstants.PlayLive.SEND_CTRL_CMD_FAILED) {
             // 指令执行失败
             showErrorToast(msg);
+        } else if (code == HKConstants.PlayLive.CAPTURE_SUCCESS) {
+            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(msg))));
+            showSuccessToast(msg);
+        } else if (code == HKConstants.PlayLive.CAPTURE_FAILED) {
+            showErrorToast(msg);
+        } else if (code == HKConstants.PlayLive.RECORD_START) {
+            showNormalToast("开始录像");
+        } else if (code == HKConstants.PlayLive.RECORD_SUCCESS) {
+            showSuccessToast(msg);
+        } else if (code == HKConstants.PlayLive.RECORD_FAILED) {
+            showErrorToast(msg);
+        } else if (code == HKConstants.PlayLive.AUDIO_FAILED) {
+            showErrorToast(msg);
+        } else if (code == HKConstants.PlayLive.AUDIO_SUCCESS) {
+            showSuccessToast(msg);
+        } else if (code == HKConstants.PlayLive.AUDIO_CLOSE_SUCCESS) {
+            showSuccessToast(msg);
         }
     }
 
