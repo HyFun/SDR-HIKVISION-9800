@@ -3,7 +3,7 @@
     android:id="@+id/hk_video_main_item_sfl_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="2dp">
+    android:padding="1dp">
 
     <FrameLayout
         android:layout_width="match_parent"

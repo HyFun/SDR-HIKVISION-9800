@@ -1051,11 +1051,11 @@ public class HKItemControl implements HKPlayContract.Presenter,
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            view.onPlayMsg(position, HKConstants.PlayLive.RECORD_SUCCESS, mRecordFile.getAbsolutePath());
             mRecordFileOutputStream = null;
             mRecordFile = null;
             mStreamRate = 0;
         }
-        view.onPlayMsg(position, HKConstants.PlayLive.RECORD_SUCCESS, mRecordFile.getAbsolutePath());
     }
 
 

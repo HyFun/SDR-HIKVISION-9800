@@ -1,12 +1,15 @@
 package com.sdr.hklibrary.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -17,12 +20,14 @@ import com.sdr.hklibrary.constant.HKConstants;
 import com.sdr.hklibrary.contract.HKPlayContract;
 import com.sdr.hklibrary.data.HKItemControl;
 import com.sdr.lib.rx.RxUtils;
-import com.sdr.lib.widget.SquareFramLayout;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
+import java.util.UUID;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 public class HKVideoControlActivity extends HKBaseActivity implements HKPlayContract.View {
@@ -31,8 +36,13 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
     private static final String CAMERAID = "CAMERAID";
 
 
-    SquareFramLayout flContainer;
     SurfaceView mSurfaceView;
+
+
+    private View viewOperationView, viewControlView;
+    private View viewTakePhoto, viewRecord, viewAudio, viewRemote;
+    private CheckBox rbControlTakePhoto, rbControlRecord, rbControlAudio, rbControlRemote;
+    private View viewBack;
 
     /**
      * 十二个 控制按钮
@@ -75,8 +85,21 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
         setTitle("预览视频");
         setDisplayHomeAsUpEnabled();
 
-        flContainer = findViewById(R.id.hk_video_control_sfl_container);
         mSurfaceView = findViewById(R.id.hk_video_control_surfaceview);
+        viewOperationView = findViewById(R.id.hk_video_control_view_control_operation);
+        viewControlView = findViewById(R.id.hk_video_control_view_control_view);
+
+
+        viewTakePhoto = findViewById(R.id.hk_video_control_view_takephoto);
+        viewRecord = findViewById(R.id.hk_video_control_view_record);
+        viewAudio = findViewById(R.id.hk_video_control_view_audio);
+        viewRemote = findViewById(R.id.hk_video_control_view_remote);
+        rbControlTakePhoto = findViewById(R.id.hk_video_control_rb_takephoto);
+        rbControlRecord = findViewById(R.id.hk_video_control_rb_record);
+        rbControlAudio = findViewById(R.id.hk_video_control_rb_audio);
+        rbControlRemote = findViewById(R.id.hk_video_control_rb_remote);
+
+
         ivLeftTop = findViewById(R.id.hk_video_control_iv_left_top);
         ivTop = findViewById(R.id.hk_video_control_iv_top);
         ivRightTop = findViewById(R.id.hk_video_control_iv_right_top);
@@ -89,9 +112,10 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
         ivNear = findViewById(R.id.hk_video_control_iv_near);
         ivZoomIn = findViewById(R.id.hk_video_control_iv_zoom_in);
         ivZoomOut = findViewById(R.id.hk_video_control_iv_zoom_out);
-
         ivMiddle = findViewById(R.id.hk_video_control_iv_middle);
 
+
+        viewBack = findViewById(R.id.hk_video_control_view_back);
     }
 
     private void initView() {
@@ -100,6 +124,64 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
     }
 
     private void initListener() {
+        viewTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new RxPermissions(getActivity())
+                        .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                if (aBoolean) {
+                                    mHKItemControl.capture(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), UUID.randomUUID() + ".jpg");
+                                }
+                            }
+                        });
+            }
+        });
+
+        viewRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean check = rbControlRecord.isChecked();
+                if (check) {
+                    mHKItemControl.stopRecord();
+                } else {
+                    new RxPermissions(getActivity())
+                            .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            .subscribe(new Consumer<Boolean>() {
+                                @Override
+                                public void accept(Boolean aBoolean) throws Exception {
+                                    if (aBoolean) {
+                                        mHKItemControl.startRecord(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), UUID.randomUUID() + ".mp4");
+                                    }
+                                }
+                            });
+                }
+            }
+        });
+
+        viewAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean check = rbControlAudio.isChecked();
+                if (check) {
+                    mHKItemControl.stopAudio();
+                } else {
+                    mHKItemControl.startAudio();
+                }
+            }
+        });
+
+        viewRemote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewOperationView.setVisibility(View.GONE);
+                viewControlView.setVisibility(View.VISIBLE);
+            }
+        });
+
+
         ivLeftTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,16 +270,14 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
             @Override
             public void onClick(View v) {
                 mHKItemControl.stopControl();
-//                new RxPermissions(getActivity())
-//                        .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-//                        .subscribe(new Consumer<Boolean>() {
-//                            @Override
-//                            public void accept(Boolean aBoolean) throws Exception {
-//                                if (aBoolean) {
-//                                    mHKItemControl.capture(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), UUID.randomUUID() + ".jpg");
-//                                }
-//                            }
-//                        });
+            }
+        });
+
+        viewBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewOperationView.setVisibility(View.VISIBLE);
+                viewControlView.setVisibility(View.GONE);
             }
         });
     }
@@ -271,16 +351,22 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
             showErrorToast(msg);
         } else if (code == HKConstants.PlayLive.RECORD_START) {
             showNormalToast("开始录像");
+            rbControlRecord.setChecked(true);
         } else if (code == HKConstants.PlayLive.RECORD_SUCCESS) {
             showSuccessToast(msg);
+            rbControlRecord.setChecked(false);
         } else if (code == HKConstants.PlayLive.RECORD_FAILED) {
             showErrorToast(msg);
+            rbControlRecord.setChecked(false);
         } else if (code == HKConstants.PlayLive.AUDIO_FAILED) {
             showErrorToast(msg);
+            rbControlAudio.setChecked(false);
         } else if (code == HKConstants.PlayLive.AUDIO_SUCCESS) {
             showSuccessToast(msg);
+            rbControlAudio.setChecked(true);
         } else if (code == HKConstants.PlayLive.AUDIO_CLOSE_SUCCESS) {
             showSuccessToast(msg);
+            rbControlAudio.setChecked(false);
         }
     }
 
