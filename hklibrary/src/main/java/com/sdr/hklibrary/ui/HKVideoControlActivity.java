@@ -282,6 +282,30 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
         });
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Observable.just(0)
+                .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(Integer integer) throws Exception {
+                        mHKItemControl.stopPlaySyn();
+                        return observer -> {
+                            observer.onNext(true);
+                            observer.onComplete();
+                        };
+                    }
+                })
+                .compose(RxUtils.io_main())
+                .subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        mHKItemControl.startPlay(cameraId, mSurfaceView);
+                    }
+                });
+    }
+
     /**
      * 发送指令
      *

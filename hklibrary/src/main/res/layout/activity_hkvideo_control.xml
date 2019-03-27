@@ -25,6 +25,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal"
+            android:visibility="visible"
             android:padding="10dp">
 
             <!--抓图-->
@@ -149,22 +150,25 @@
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_left_top"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
                             android:src="@mipmap/hk_control_left_top"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_top"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
                             android:src="@mipmap/hk_control_top" />
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_right_top"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
                             android:src="@mipmap/hk_control_right_top" />
                     </TableRow>
@@ -175,22 +179,25 @@
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_left"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
                             android:src="@mipmap/hk_control_left"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_middle"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
                             android:src="@mipmap/hk_control_middle"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_right"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
                             android:src="@mipmap/hk_control_right"/>
                     </TableRow>
@@ -201,22 +208,25 @@
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_left_bottom"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
                             android:src="@mipmap/hk_control_left_bottom"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_bottom"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
                             android:src="@mipmap/hk_control_bottom" />
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_right_bottom"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
                             android:src="@mipmap/hk_control_right_bottom"/>
                     </TableRow>
@@ -229,36 +239,36 @@
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_near"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
-                            android:padding="10dp"
                             android:src="@mipmap/hk_control_near"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_far"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
-                            android:padding="10dp"
                             android:src="@mipmap/hk_control_far" />
                     </TableRow>
                     <TableRow android:gravity="center">
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_zoom_in"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
-                            android:padding="10dp"
                             android:src="@mipmap/hk_control_zoom_in"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_zoom_out"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="5dp"
                             android:background="?selectableItemBackground"
-                            android:padding="10dp"
                             android:src="@mipmap/hk_control_zoom_out"/>
                     </TableRow>
                 </TableLayout>

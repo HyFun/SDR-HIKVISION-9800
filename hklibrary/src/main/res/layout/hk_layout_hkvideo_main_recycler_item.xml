@@ -8,7 +8,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#333333">
+        android:background="#2D343A">
 
         <SurfaceView
             android:id="@+id/hk_video_main_item_sv"
