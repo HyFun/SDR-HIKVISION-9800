@@ -19,6 +19,7 @@ import com.sdr.hklibrary.contract.HKMainContract;
 import com.sdr.hklibrary.data.HKDataInfo;
 import com.sdr.hklibrary.data.HKHistory;
 import com.sdr.hklibrary.data.HKItemControl;
+import com.sdr.hklibrary.data.HKVideoConfig;
 import com.sdr.hklibrary.presenter.HKMainPresenter;
 import com.sdr.hklibrary.support.HKVideoUtil;
 import com.sdr.lib.ui.tree.TreeNode;
@@ -186,14 +187,14 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
     @Override
     public void initSuccess(List<TreeNode> treeNodeList) {
         showContentView();
-//        new HKVideoPlayListDialog(getContext(), treeNodeList, new TreeNodeRecyclerAdapter.OnTreeNodeSigleClickListener() {
-//            @Override
-//            public void onSigleClick(TreeNode treeNode, int i, int i1, boolean b) {
-//                ToastUtil.showCorrectMsg(treeNode.getLabel());
-//            }
-//        }).show();
         this.treeNodeList.clear();
-        this.treeNodeList.addAll(treeNodeList);
+        // 重构
+        HKVideoConfig hkVideoConfig = HKVideoLibrary.getInstance().getHkVideoConfig();
+        if (hkVideoConfig != null && hkVideoConfig.rebuildCameraList(treeNodeList) != null) {
+            this.treeNodeList.addAll(hkVideoConfig.rebuildCameraList(treeNodeList));
+        } else {
+            this.treeNodeList.addAll(treeNodeList);
+        }
     }
 
     @Override

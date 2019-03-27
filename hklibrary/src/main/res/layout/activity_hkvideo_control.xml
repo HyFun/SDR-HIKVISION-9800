@@ -152,24 +152,21 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?selectableItemBackground"
-                            android:src="@mipmap/hk_control_left_top"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_left_top"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_top"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?selectableItemBackground"
-                            android:src="@mipmap/hk_control_top"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_top" />
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_right_top"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?selectableItemBackground"
-                            android:src="@mipmap/hk_control_right_top"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_right_top" />
                     </TableRow>
 
                     <TableRow
@@ -181,24 +178,21 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?selectableItemBackground"
-                            android:src="@mipmap/hk_control_left"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_left"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_middle"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?selectableItemBackground"
-                            android:src="@mipmap/hk_control_middle"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_middle"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_right"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?selectableItemBackground"
-                            android:src="@mipmap/hk_control_right"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_right"/>
                     </TableRow>
 
                     <TableRow
@@ -210,24 +204,21 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?selectableItemBackground"
-                            android:src="@mipmap/hk_control_left_bottom"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_left_bottom"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_bottom"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?selectableItemBackground"
-                            android:src="@mipmap/hk_control_bottom"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_bottom" />
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_right_bottom"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?selectableItemBackground"
-                            android:src="@mipmap/hk_control_right_bottom"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_right_bottom"/>
                     </TableRow>
                 </TableLayout>
                 <TableLayout
@@ -242,8 +233,7 @@
                             android:layout_height="60dp"
                             android:background="?selectableItemBackground"
                             android:padding="10dp"
-                            android:src="@mipmap/hk_control_near"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_near"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_far"
@@ -251,8 +241,7 @@
                             android:layout_height="60dp"
                             android:background="?selectableItemBackground"
                             android:padding="10dp"
-                            android:src="@mipmap/hk_control_far"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_far" />
                     </TableRow>
                     <TableRow android:gravity="center">
 
@@ -262,8 +251,7 @@
                             android:layout_height="60dp"
                             android:background="?selectableItemBackground"
                             android:padding="10dp"
-                            android:src="@mipmap/hk_control_zoom_in"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_zoom_in"/>
 
                         <ImageView
                             android:id="@+id/hk_video_control_iv_zoom_out"
@@ -271,8 +259,7 @@
                             android:layout_height="60dp"
                             android:background="?selectableItemBackground"
                             android:padding="10dp"
-                            android:src="@mipmap/hk_control_zoom_out"
-                            android:tint="@color/colorPrimary" />
+                            android:src="@mipmap/hk_control_zoom_out"/>
                     </TableRow>
                 </TableLayout>
             </LinearLayout>

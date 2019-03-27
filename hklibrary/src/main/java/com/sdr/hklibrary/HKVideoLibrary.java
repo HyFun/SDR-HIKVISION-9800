@@ -12,6 +12,7 @@ import com.hikvision.vmsnetsdk.ServInfo;
 import com.hikvision.vmsnetsdk.VMSNetSDK;
 import com.orhanobut.logger.Logger;
 import com.sdr.hklibrary.data.HKDataInfo;
+import com.sdr.hklibrary.data.HKVideoConfig;
 import com.sdr.hklibrary.ui.HKVideoMainActivity;
 import com.sdr.lib.rx.RxUtils;
 import com.sdr.lib.util.ToastTopUtil;
@@ -56,6 +57,16 @@ public class HKVideoLibrary {
         this.debug = debug;
         this.drawable = drawable;
         this.toolbarRes = toolbarRes;
+    }
+
+    private HKVideoConfig hkVideoConfig;
+
+    public void setHkVideoConfig(HKVideoConfig hkVideoConfig) {
+        this.hkVideoConfig = hkVideoConfig;
+    }
+
+    public HKVideoConfig getHkVideoConfig() {
+        return hkVideoConfig;
     }
 
     public Application getApplication() {
