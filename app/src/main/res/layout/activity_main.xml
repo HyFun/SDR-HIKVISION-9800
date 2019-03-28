@@ -16,7 +16,7 @@
         android:id="@+id/main_edt_url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="60.191.94.170:8086" />
+        android:text="60.191.39.34:8086" />
 
     <TextView
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:id="@+id/main_edt_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="admin" />
+        android:text="yduser" />
 
     <TextView
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
         android:id="@+id/main_edt_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hik12345" />
+        android:text="Jssbb123" />
 
     <Button
         android:id="@+id/main_btn_login"

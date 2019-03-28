@@ -120,7 +120,7 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
 
     private void initView() {
         mHKItemControl = new HKItemControl(0, this);
-        mHKItemControl.startPlay(cameraId, mSurfaceView);
+        //mHKItemControl.startPlay(cameraId, mSurfaceView);
     }
 
     private void initListener() {

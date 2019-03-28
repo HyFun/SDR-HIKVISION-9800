@@ -30,6 +30,7 @@ import java.nio.ByteBuffer;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 import static com.sdr.hklibrary.constant.HKConstants.PlayStatus.LIVE_PLAY;
@@ -114,7 +115,14 @@ public class HKItemControl implements HKPlayContract.Presenter,
         this.mCameraID = cameraID;
         this.mSurfaceView = surfaceView;
         // 显示加载框
-        view.showLoadingDialog("正在加载视频中...");
+        Observable.just(0)
+                .compose(RxUtils.io_main())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        view.showLoadingDialog("正在加载视频中...");
+                    }
+                });
 
         Observable.just(0)
                 .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
@@ -183,7 +191,15 @@ public class HKItemControl implements HKPlayContract.Presenter,
         if (HKConstants.PlayStatus.LIVE_INIT == currentStatus) {
             return;
         }
-        view.showLoadingDialog("正在关闭视频中...");
+        // 显示加载框
+        Observable.just(0)
+                .compose(RxUtils.io_main())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        view.showLoadingDialog("正在关闭视频中...");
+                    }
+                });
         Observable.just(0)
                 .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
                     @Override
@@ -700,7 +716,14 @@ public class HKItemControl implements HKPlayContract.Presenter,
             case RtspClient.DATATYPE_HEADER:
                 boolean ret = processStreamHeader(data, length);
                 if (!ret) {
-                    view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_FAILED, "启动播放失败");
+                    Observable.just(0)
+                            .compose(RxUtils.io_main())
+                            .subscribe(new Consumer<Integer>() {
+                                @Override
+                                public void accept(Integer integer) throws Exception {
+                                    view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_FAILED, "启动播放失败");
+                                }
+                            });
                 } else {
                     Logger.t(HKConstants.HK_TAG).d("MediaPlayer Header success!");
                 }
@@ -717,6 +740,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
     /*
          * handle - - 引擎id opt - -回调消息，包括：RTSPCLIENT_MSG_PLAYBACK_FINISH,RTSPCLIENT_MSG_BUFFER_OVERFLOW
          * ,RTSPCLIENT_MSG_CONNECTION_EXCEPTION 三种 param1 - - 保留参数 param2 - - 保留参数 useId - - 用户数据，默认就是引擎id与handle相同
+         * 在子线程中
          */
     @Override
     public void onMessageCallBack(int handle, int opt, int param1, int param2, int useId) {
