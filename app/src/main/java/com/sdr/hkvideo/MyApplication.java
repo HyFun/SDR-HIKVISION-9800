@@ -3,7 +3,7 @@ package com.sdr.hkvideo;
 import android.app.Application;
 
 import com.sdr.hklibrary.HKVideoLibrary;
-import com.sdr.lib.SDRLibrary;
+import com.sdr.lib.SDR;
 
 /**
  * Created by HyFun on 2018/11/13.
@@ -15,7 +15,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SDRLibrary.getInstance().init(this, BuildConfig.DEBUG);
-        HKVideoLibrary.getInstance().init(this, BuildConfig.DEBUG, BaseActivity.getHeaderBarDrawable(getApplicationContext()), R.layout.layout_public_toolbar_white);
+        SDR.register(this, new BaseActivityConfig(getApplicationContext()));
+        HKVideoLibrary.getInstance().init(this, BuildConfig.DEBUG);
     }
 }

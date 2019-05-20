@@ -1,13 +1,9 @@
 package com.sdr.hklibrary.base;
 
-import android.graphics.drawable.Drawable;
-
-import com.sdr.hklibrary.HKVideoLibrary;
 import com.sdr.lib.mvp.AbstractPresenter;
 import com.sdr.lib.mvp.AbstractView;
 import com.sdr.lib.ui.dialog.SDRLoadingDialog;
-import com.sdr.lib.util.ToastTopUtil;
-import com.sdr.lib.util.ToastUtil;
+import com.sdr.lib.util.AlertUtil;
 
 /**
  * Created by HyFun on 2018/11/13.
@@ -27,16 +23,8 @@ public class HKBaseActivity<T extends AbstractPresenter> extends com.sdr.lib.bas
         }
     }
 
-    @Override
-    protected int onHeaderBarToolbarRes() {
-        return HKVideoLibrary.getInstance().getToolbarRes();
-    }
 
-    @Override
-    protected Drawable onHeaderBarDrawable() {
-        return HKVideoLibrary.getInstance().getDrawable();
-    }
-
+    // ——————————————————————————————————————————————
     private SDRLoadingDialog sdrLoadingDialog;
 
     @Override
@@ -59,31 +47,31 @@ public class HKBaseActivity<T extends AbstractPresenter> extends com.sdr.lib.bas
 
     @Override
     public void showSuccessMsg(String s) {
-        ToastTopUtil.showCorrectTopToast(s);
+        AlertUtil.showPositiveToastTop(s);
     }
 
     @Override
     public void showErrorMsg(String s) {
-        ToastTopUtil.showErrorTopToast(s);
+        AlertUtil.showNegativeToastTop(s);
     }
 
     @Override
     public void showNormalMsg(String s) {
-        ToastTopUtil.showNormalTopToast(s);
+        AlertUtil.showNormalToastTop(s);
     }
 
     @Override
     public void showSuccessToast(String s) {
-        ToastUtil.showCorrectMsg(s);
+        AlertUtil.showPositiveToast(s);
     }
 
     @Override
     public void showErrorToast(String s) {
-        ToastUtil.showErrorMsg(s);
+        AlertUtil.showNegativeToast(s);
     }
 
     @Override
     public void showNormalToast(String s) {
-        ToastUtil.showNormalMsg(s);
+        AlertUtil.showNormalToast(s);
     }
 }

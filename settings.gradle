@@ -1,1 +1,1 @@
-include ':app', ':hklibrary'
+include ':app', ':sdr-hikvision-9800-http'

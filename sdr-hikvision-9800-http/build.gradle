@@ -43,7 +43,7 @@ dependencies {
     // base
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     compileOnly 'com.android.support:design:27.1.1'
-    compileOnly 'com.github.HyfSunshine:SDRLibrary:1.0.0'
+    compileOnly 'com.github.sz-sdr.SDR-LIBRARY:sdr-library:2.0.1'
     compileOnly 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
     implementation files('libs/xUtils-2.6.14.jar')
 }

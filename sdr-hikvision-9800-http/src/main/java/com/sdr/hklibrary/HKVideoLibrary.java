@@ -15,6 +15,7 @@ import com.sdr.hklibrary.data.HKDataInfo;
 import com.sdr.hklibrary.data.HKVideoConfig;
 import com.sdr.hklibrary.ui.HKVideoMainActivity;
 import com.sdr.lib.rx.RxUtils;
+import com.sdr.lib.util.AlertUtil;
 import com.sdr.lib.util.ToastTopUtil;
 
 import io.reactivex.Observable;
@@ -48,15 +49,11 @@ public class HKVideoLibrary {
 
     private Application application;
     private boolean debug;
-    private Drawable drawable;
-    private int toolbarRes;
     private boolean loadJNI; // 是否已经加载过库文件
 
-    public void init(Application application, final boolean debug, Drawable drawable, int toolbarRes) {
+    public void init(Application application, final boolean debug) {
         this.application = application;
         this.debug = debug;
-        this.drawable = drawable;
-        this.toolbarRes = toolbarRes;
     }
 
     private HKVideoConfig hkVideoConfig;
@@ -75,14 +72,6 @@ public class HKVideoLibrary {
 
     public boolean isDebug() {
         return debug;
-    }
-
-    public Drawable getDrawable() {
-        return drawable.getConstantState().newDrawable();
-    }
-
-    public int getToolbarRes() {
-        return toolbarRes;
     }
 
     /**
@@ -127,7 +116,7 @@ public class HKVideoLibrary {
                         loadJNI = true;
                     }, error -> {
                         Logger.e(error, error.getMessage());
-                        ToastTopUtil.showErrorTopToast("海康视频库文件加载失败");
+                        AlertUtil.showNegativeToastTop("海康视频库文件加载失败");
                     });
         }
     }
