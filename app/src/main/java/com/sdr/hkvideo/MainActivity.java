@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.sdr.hklibrary.HKVideoLibrary;
+import com.sdr.hklibrary.SDR_HIKVISION_9800_HTTP;
 
 public class MainActivity extends BaseActivity {
 
@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
                 String url = edtUrl.getText().toString().trim();
                 String userName = edtUserName.getText().toString().trim();
                 String passWord = edtPassWord.getText().toString().trim();
-                HKVideoLibrary.getInstance().start(getContext(), url, userName, passWord);
+                SDR_HIKVISION_9800_HTTP.getInstance().start(getContext(), url, userName, passWord);
             }
         });
     }

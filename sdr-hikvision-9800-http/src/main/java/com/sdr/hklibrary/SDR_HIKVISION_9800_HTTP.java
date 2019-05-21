@@ -3,7 +3,6 @@ package com.sdr.hklibrary;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.wifi.WifiManager;
 
 import com.hik.mcrsdk.MCRSDK;
@@ -16,7 +15,6 @@ import com.sdr.hklibrary.data.HKVideoConfig;
 import com.sdr.hklibrary.ui.HKVideoMainActivity;
 import com.sdr.lib.rx.RxUtils;
 import com.sdr.lib.util.AlertUtil;
-import com.sdr.lib.util.ToastTopUtil;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -28,23 +26,23 @@ import io.reactivex.functions.Function;
  * Description: 初始化HKLibrary，开启HKMainActivity
  */
 
-public class HKVideoLibrary {
-    private static HKVideoLibrary hkVideoLibrary;
+public class SDR_HIKVISION_9800_HTTP {
+    private static SDR_HIKVISION_9800_HTTP SDRHIKVISION9800HTTP;
 
     /**
      * 获取HKVideoLibrary 的实例
      *
      * @return
      */
-    public static final HKVideoLibrary getInstance() {
-        if (hkVideoLibrary == null) {
-            synchronized (HKVideoLibrary.class) {
-                if (hkVideoLibrary == null) {
-                    hkVideoLibrary = new HKVideoLibrary();
+    public static final SDR_HIKVISION_9800_HTTP getInstance() {
+        if (SDRHIKVISION9800HTTP == null) {
+            synchronized (SDR_HIKVISION_9800_HTTP.class) {
+                if (SDRHIKVISION9800HTTP == null) {
+                    SDRHIKVISION9800HTTP = new SDR_HIKVISION_9800_HTTP();
                 }
             }
         }
-        return hkVideoLibrary;
+        return SDRHIKVISION9800HTTP;
     }
 
     private Application application;

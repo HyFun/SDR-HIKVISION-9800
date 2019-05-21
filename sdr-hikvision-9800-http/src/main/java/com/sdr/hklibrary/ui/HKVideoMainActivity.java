@@ -11,7 +11,7 @@ import android.widget.RadioGroup;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.sdr.hklibrary.HKVideoLibrary;
+import com.sdr.hklibrary.SDR_HIKVISION_9800_HTTP;
 import com.sdr.hklibrary.R;
 import com.sdr.hklibrary.base.HKBaseActivity;
 import com.sdr.hklibrary.constant.HKConstants;
@@ -68,7 +68,7 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
         presenter = new HKMainPresenter(this);
         String url = HKDataInfo.getInstance().getUrl();
         showLoadingView();
-        presenter.init(url, HKDataInfo.getInstance().getUserName(), HKDataInfo.getInstance().getPassWord(), HKVideoLibrary.getInstance().getMacAddr(), HKDataInfo.getInstance().getServInfo());
+        presenter.init(url, HKDataInfo.getInstance().getUserName(), HKDataInfo.getInstance().getPassWord(), SDR_HIKVISION_9800_HTTP.getInstance().getMacAddr(), HKDataInfo.getInstance().getServInfo());
 
         changeRecycler(currentViewNum, null);
     }
@@ -189,7 +189,7 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
         showContentView();
         this.treeNodeList.clear();
         // 重构
-        HKVideoConfig hkVideoConfig = HKVideoLibrary.getInstance().getHkVideoConfig();
+        HKVideoConfig hkVideoConfig = SDR_HIKVISION_9800_HTTP.getInstance().getHkVideoConfig();
         if (hkVideoConfig != null && hkVideoConfig.rebuildCameraList(treeNodeList) != null) {
             this.treeNodeList.addAll(hkVideoConfig.rebuildCameraList(treeNodeList));
         } else {

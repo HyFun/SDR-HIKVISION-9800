@@ -40,7 +40,7 @@ dependencies {
     }
     // base
     implementation 'com.android.support:design:27.1.1'
-    implementation 'com.github.sz-sdr.SDR-LIBRARY:sdr-library:2.0.1'
+    implementation 'com.github.sz-sdr:SDR-LIBRARY:2.1.0'
     implementation project(':sdr-hikvision-9800-http')
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
 }

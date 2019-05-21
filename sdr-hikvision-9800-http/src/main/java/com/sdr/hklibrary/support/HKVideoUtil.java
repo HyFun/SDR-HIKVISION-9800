@@ -1,6 +1,6 @@
 package com.sdr.hklibrary.support;
 
-import com.sdr.hklibrary.HKVideoLibrary;
+import com.sdr.hklibrary.SDR_HIKVISION_9800_HTTP;
 import com.sdr.hklibrary.constant.HKConstants;
 import com.sdr.hklibrary.data.HKItemControl;
 import com.sdr.lib.rx.RxUtils;
@@ -26,7 +26,7 @@ public class HKVideoUtil {
         if (hkACache == null) {
             synchronized (HKVideoUtil.class) {
                 if (hkACache == null) {
-                    hkACache = ACache.get(HKVideoLibrary.getInstance().getApplication().getExternalCacheDir());
+                    hkACache = ACache.get(SDR_HIKVISION_9800_HTTP.getInstance().getApplication().getExternalCacheDir());
                 }
             }
         }
