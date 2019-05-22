@@ -11,8 +11,8 @@ import android.widget.RadioGroup;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.sdr.hklibrary.SDR_HIKVISION_9800_HTTP;
 import com.sdr.hklibrary.R;
+import com.sdr.hklibrary.SDR_HIKVISION_9800_HTTP;
 import com.sdr.hklibrary.base.HKBaseActivity;
 import com.sdr.hklibrary.constant.HKConstants;
 import com.sdr.hklibrary.contract.HKMainContract;
@@ -27,6 +27,8 @@ import com.sdr.lib.ui.tree.TreeNode;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import io.reactivex.functions.Consumer;
 
 public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> implements HKMainContract.View {
 
@@ -100,8 +102,11 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
                 // 有历史记录  开启预览
                 // 关闭正在播放的视频  然后开启历史记录
                 HKVideoUtil.closeAllPlayingVideo(mainRecyclerAdapter.getData())
-                        .subscribe(ret -> {
-                            changeRecycler(hkHistory.getViewNum(), hkHistory.getCameraInfoList());
+                        .subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                changeRecycler(hkHistory.getViewNum(), hkHistory.getCameraInfoList());
+                            }
                         });
             }
         });
@@ -133,8 +138,11 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
                 cameraInfoList.add(new HKHistory.CameraInfo(item.getPosition(), item.getCameraID()));
         }
         // 关闭所有的视频  然后重新开启预览
-        HKVideoUtil.closeAllPlayingVideo(mainRecyclerAdapter.getData()).subscribe(ret -> {
-            changeRecycler(currentViewNum, cameraInfoList);
+        HKVideoUtil.closeAllPlayingVideo(mainRecyclerAdapter.getData()).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                changeRecycler(currentViewNum, cameraInfoList);
+            }
         });
     }
 
@@ -168,9 +176,12 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
                         }
                         // 2.关闭正在播放的视频  关闭完成之后  结束anctivity
                         showLoadingDialog("正在关闭视频");
-                        HKVideoUtil.closeAllPlayingVideo(mainRecyclerAdapter.getData()).subscribe(ret -> {
-                            hideLoadingDialog();
-                            finish();
+                        HKVideoUtil.closeAllPlayingVideo(mainRecyclerAdapter.getData()).subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                hideLoadingDialog();
+                                finish();
+                            }
                         });
                     }
                 })
@@ -212,7 +223,7 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
      * @param num
      * @param cameraInfoList
      */
-    private void changeRecycler(int num, List<HKHistory.CameraInfo> cameraInfoList) {
+    private void changeRecycler(final int num, List<HKHistory.CameraInfo> cameraInfoList) {
         if (mainRecyclerAdapter == null || cameraInfoList != null) {
             List<HKItemControl> itemList = new ArrayList<>();
             mainRecyclerAdapter = new HKMainRecyclerAdapter(R.layout.hk_layout_hkvideo_main_recycler_item, itemList, this, treeNodeList);
@@ -245,14 +256,17 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
                 }
                 // 关闭播放
                 HKVideoUtil.closeAllPlayingVideo(hkItemControlList)
-                        .subscribe(ret -> {
-                            List<HKItemControl> hkItemControls = mainRecyclerAdapter.getData();
-                            Iterator<HKItemControl> iterator = hkItemControls.iterator();
-                            while (iterator.hasNext()) {
-                                HKItemControl item = iterator.next();
-                                if (item.getPosition() >= (num * num)) {
-                                    iterator.remove();
-                                    mainRecyclerAdapter.notifyItemRemoved(item.getPosition());
+                        .subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                List<HKItemControl> hkItemControls = mainRecyclerAdapter.getData();
+                                Iterator<HKItemControl> iterator = hkItemControls.iterator();
+                                while (iterator.hasNext()) {
+                                    HKItemControl item = iterator.next();
+                                    if (item.getPosition() >= (num * num)) {
+                                        iterator.remove();
+                                        mainRecyclerAdapter.notifyItemRemoved(item.getPosition());
+                                    }
                                 }
                             }
                         });

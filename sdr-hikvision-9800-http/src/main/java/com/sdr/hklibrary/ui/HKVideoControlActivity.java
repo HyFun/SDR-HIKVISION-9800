@@ -291,16 +291,13 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
                     @Override
                     public ObservableSource<Boolean> apply(Integer integer) throws Exception {
                         mHKItemControl.stopPlaySyn();
-                        return observer -> {
-                            observer.onNext(true);
-                            observer.onComplete();
-                        };
+                        return RxUtils.createData(true);
                     }
                 })
                 .compose(RxUtils.io_main())
-                .subscribe(new Consumer<Boolean>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
-                    public void accept(Boolean aBoolean) throws Exception {
+                    public void accept(Object object) throws Exception {
                         mHKItemControl.startPlay(cameraId, mSurfaceView);
                     }
                 });
@@ -334,14 +331,14 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
                                     @Override
                                     public ObservableSource<Boolean> apply(Integer integer) throws Exception {
                                         mHKItemControl.stopPlaySyn();
-                                        return observer -> {
-                                            observer.onNext(true);
-                                            observer.onComplete();
-                                        };
+                                        return RxUtils.createData(true);
                                     }
                                 }).compose(RxUtils.io_main())
-                                .subscribe(ret -> {
-                                    finish();
+                                .subscribe(new Consumer<Object>() {
+                                    @Override
+                                    public void accept(Object object) throws Exception {
+                                        finish();
+                                    }
                                 });
                     }
                 })

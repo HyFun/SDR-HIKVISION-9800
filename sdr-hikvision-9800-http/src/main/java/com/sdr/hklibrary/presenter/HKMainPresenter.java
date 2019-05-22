@@ -14,6 +14,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
@@ -37,7 +38,7 @@ public class HKMainPresenter extends HKBasePresenter<HKMainContract.View> implem
      * @param servInfo
      */
     @Override
-    public void init(String url, String userName, String passWord, String macAddr, ServInfo servInfo) {
+    public void init(final String url, final String userName, final String passWord, final String macAddr, final ServInfo servInfo) {
         Disposable disposable = Observable.just(0)
                 .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
                     @Override
@@ -45,10 +46,7 @@ public class HKMainPresenter extends HKBasePresenter<HKMainContract.View> implem
                         // 登录
                         boolean ret = VMSNetSDK.getInstance().login(url, userName, passWord, macAddr, servInfo, HttpUtil.clearDomainAddress(url));
                         if (ret) {
-                            return observer -> {
-                                observer.onNext(ret);
-                                observer.onComplete();
-                            };
+                            return RxUtils.createData(ret);
                         } else {
                             return Observable.error(new Exception(VMSNetSDK.getInstance().getLastErrorCode() + "，登录失败"));
                         }
@@ -59,17 +57,20 @@ public class HKMainPresenter extends HKBasePresenter<HKMainContract.View> implem
                     public ObservableSource<List<TreeNode>> apply(Boolean aBoolean) throws Exception {
                         HKResourceHelper resourceHelper = new HKResourceHelper(url, servInfo);
                         resourceHelper.start();
-                        return observer -> {
-                            observer.onNext(resourceHelper.getTreeNodeList());
-                            observer.onComplete();
-                        };
+                        return RxUtils.createData(resourceHelper.getTreeNodeList());
                     }
                 })
                 .compose(RxUtils.io_main())
-                .subscribe(list -> {
-                    view.initSuccess(list);
-                }, error -> {
-                    view.initFailed(error.getMessage());
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        view.initSuccess((List<TreeNode>) object);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        view.initFailed(throwable.getMessage());
+                    }
                 });
 
         addSubscription(disposable);

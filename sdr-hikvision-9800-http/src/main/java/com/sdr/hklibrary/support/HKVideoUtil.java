@@ -40,7 +40,7 @@ public class HKVideoUtil {
      * @return
      */
     public static Observable<Boolean> closeAllPlayingVideo(List<HKItemControl> list) {
-        List<HKItemControl> hkItemControlList = new ArrayList<>();
+        final List<HKItemControl> hkItemControlList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             HKItemControl hkItemControl = list.get(i);
             if (hkItemControl.getCurrentStatus() != HKConstants.PlayStatus.LIVE_INIT) {
@@ -55,12 +55,9 @@ public class HKVideoUtil {
                         for (HKItemControl item : hkItemControlList) {
                             item.stopPlaySyn();
                         }
-                        return observer -> {
-                            observer.onNext(true);
-                            observer.onComplete();
-                        };
+                        return RxUtils.createData(true);
                     }
                 })
-                .compose(RxUtils.io_main());
+                .compose(RxUtils.<Boolean>io_main());
     }
 }

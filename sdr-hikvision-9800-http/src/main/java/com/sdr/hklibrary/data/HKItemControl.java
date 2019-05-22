@@ -30,6 +30,7 @@ import java.nio.ByteBuffer;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -103,7 +104,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
      * @param surfaceView
      */
     @Override
-    public void startPlay(String cameraID, SurfaceView surfaceView) {
+    public void startPlay(final String cameraID, SurfaceView surfaceView) {
         if (TextUtils.isEmpty(cameraID)) {
             view.onPlayMsg(position, HKConstants.PlayLive.PLAY_CAMERA_INFO_ID_NULL, "cameraInfo中的id为空");
             return;
@@ -117,9 +118,9 @@ public class HKItemControl implements HKPlayContract.Presenter,
         // 显示加载框
         Observable.just(0)
                 .compose(RxUtils.io_main())
-                .subscribe(new Consumer<Integer>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
-                    public void accept(Integer integer) throws Exception {
+                    public void accept(Object object) throws Exception {
                         view.showLoadingDialog("正在加载视频中...");
                     }
                 });
@@ -169,20 +170,26 @@ public class HKItemControl implements HKPlayContract.Presenter,
                             int errorCode = mRtspHandler.getLastError();
                             return Observable.error(new Exception("startRtsp():: errorCode is R" + errorCode));
                         }
-                        return observer -> {
-                            observer.onNext(ret);
-                            observer.onComplete();
-                        };
+                        return RxUtils.createData(ret);
                     }
                 })
                 .compose(RxUtils.io_main())
-                .subscribe(ret -> {
-                    view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_RTSP_SUCCESS, "取流成功");
-                }, error -> {
-                    view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_RTSP_FAIL, error.getMessage());
-                    view.hideLoadingDialog();
-                }, () -> {
-                    view.hideLoadingDialog();
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_RTSP_SUCCESS, "取流成功");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_RTSP_FAIL, throwable.getMessage());
+                        view.hideLoadingDialog();
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        view.hideLoadingDialog();
+                    }
                 });
     }
 
@@ -194,9 +201,9 @@ public class HKItemControl implements HKPlayContract.Presenter,
         // 显示加载框
         Observable.just(0)
                 .compose(RxUtils.io_main())
-                .subscribe(new Consumer<Integer>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
-                    public void accept(Integer integer) throws Exception {
+                    public void accept(Object integer) throws Exception {
                         view.showLoadingDialog("正在关闭视频中...");
                     }
                 });
@@ -206,22 +213,28 @@ public class HKItemControl implements HKPlayContract.Presenter,
                     public ObservableSource<Boolean> apply(Integer integer) throws Exception {
                         try {
                             stopPlaySyn();
-                            return observer -> {
-                                observer.onNext(true);
-                                observer.onComplete();
-                            };
+                            return RxUtils.createData(true);
                         } catch (Exception e) {
                             return Observable.error(e);
                         }
                     }
                 })
                 .compose(RxUtils.io_main())
-                .subscribe(ret -> {
-                    view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_STOP_SUCCESS, "停止播放成功");
-                }, error -> {
-                    view.hideLoadingDialog();
-                }, () -> {
-                    view.hideLoadingDialog();
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_STOP_SUCCESS, "停止播放成功");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        view.hideLoadingDialog();
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        view.hideLoadingDialog();
+                    }
                 });
     }
 
@@ -238,7 +251,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
     }
 
     @Override
-    public void sendCtrlCmd(int gestureID) {
+    public void sendCtrlCmd(final int gestureID) {
         view.showLoadingDialog("正在执行命令");
         Observable.just(0)
                 .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
@@ -260,19 +273,22 @@ public class HKItemControl implements HKPlayContract.Presenter,
                         if (!ret) {
                             return Observable.error(new Exception("指令执行失败"));
                         }
-                        return observer -> {
-                            observer.onNext(ret);
-                            observer.onComplete();
-                        };
+                        return RxUtils.createData(ret);
                     }
                 })
                 .compose(RxUtils.io_main())
-                .subscribe(ret -> {
-                    view.hideLoadingDialog();
-                    view.onPlayMsg(position, HKConstants.PlayLive.SEND_CTRL_CMD_SUCCESS, "指令执行成功");
-                }, error -> {
-                    view.hideLoadingDialog();
-                    view.onPlayMsg(position, HKConstants.PlayLive.SEND_CTRL_CMD_FAILED, error.getMessage());
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        view.hideLoadingDialog();
+                        view.onPlayMsg(position, HKConstants.PlayLive.SEND_CTRL_CMD_SUCCESS, "指令执行成功");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        view.hideLoadingDialog();
+                        view.onPlayMsg(position, HKConstants.PlayLive.SEND_CTRL_CMD_FAILED, throwable.getMessage());
+                    }
                 });
     }
 
@@ -293,18 +309,21 @@ public class HKItemControl implements HKPlayContract.Presenter,
                         if (!ret) {
                             return Observable.error(new Exception("停止控制失败"));
                         }
-                        return observer -> {
-                            observer.onNext(ret);
-                            observer.onComplete();
-                        };
+                        return RxUtils.createData(ret);
                     }
                 }).compose(RxUtils.io_main())
-                .subscribe(ret -> {
-                    view.onPlayMsg(position, HKConstants.PlayLive.STOP_CONTROL_SUCCESS, "停止控制成功");
-                    view.hideLoadingDialog();
-                }, error -> {
-                    view.onPlayMsg(position, HKConstants.PlayLive.STOP_CONTROL_FAILED, "停止控制失败");
-                    view.hideLoadingDialog();
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object object) throws Exception {
+                        view.onPlayMsg(position, HKConstants.PlayLive.STOP_CONTROL_SUCCESS, "停止控制成功");
+                        view.hideLoadingDialog();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        view.onPlayMsg(position, HKConstants.PlayLive.STOP_CONTROL_FAILED, "停止控制失败");
+                        view.hideLoadingDialog();
+                    }
                 });
     }
 
@@ -718,9 +737,9 @@ public class HKItemControl implements HKPlayContract.Presenter,
                 if (!ret) {
                     Observable.just(0)
                             .compose(RxUtils.io_main())
-                            .subscribe(new Consumer<Integer>() {
+                            .subscribe(new Consumer<Object>() {
                                 @Override
-                                public void accept(Integer integer) throws Exception {
+                                public void accept(Object object) throws Exception {
                                     view.onPlayMsg(position, HKConstants.PlayLive.PLAY_LIVE_FAILED, "启动播放失败");
                                 }
                             });

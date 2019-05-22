@@ -18,6 +18,7 @@ import com.sdr.lib.util.AlertUtil;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
@@ -83,7 +84,7 @@ public class SDR_HIKVISION_9800_HTTP {
         return mac == null ? "" : mac;
     }
 
-    public void start(Context context, String url, String userName, String passWord) {
+    public void start(final Context context, final String url, final String userName, final String passWord) {
         // 先加载
         if (loadJNI) {
             startMain(context, url, userName, passWord);
@@ -99,22 +100,25 @@ public class SDR_HIKVISION_9800_HTTP {
                                 RtspClient.initLib();
                                 MCRSDK.setPrint(1, null);
                                 VMSNetSDK.getInstance().openLog(debug);
-                                return obser -> {
-                                    obser.onNext(true);
-                                    obser.onComplete();
-                                };
+                                return RxUtils.createData(true);
                             } catch (Exception e) {
                                 return Observable.error(e);
                             }
                         }
                     })
                     .compose(RxUtils.io_main())
-                    .subscribe(result -> {
-                        startMain(context, url, userName, passWord);
-                        loadJNI = true;
-                    }, error -> {
-                        Logger.e(error, error.getMessage());
-                        AlertUtil.showNegativeToastTop("海康视频库文件加载失败");
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(Object object) throws Exception {
+                            startMain(context, url, userName, passWord);
+                            loadJNI = true;
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            Logger.e(throwable, throwable.getMessage());
+                            AlertUtil.showNegativeToastTop("海康视频库文件加载失败");
+                        }
                     });
         }
     }

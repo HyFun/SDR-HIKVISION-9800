@@ -1,12 +1,14 @@
 package com.sdr.hklibrary.ui;
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -19,6 +21,7 @@ import com.sdr.hklibrary.data.HKItemControl;
 import com.sdr.hklibrary.support.HKVideoPlayListDialog;
 import com.sdr.lib.mvp.AbstractView;
 import com.sdr.lib.ui.tree.TreeNode;
+import com.sdr.lib.ui.tree.TreeNodeRecyclerAdapter;
 
 import java.util.List;
 
@@ -47,7 +50,7 @@ public class HKMainRecyclerAdapter extends BaseQuickAdapter<HKItemControl, BaseV
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, HKItemControl item) {
+    protected void convert(BaseViewHolder helper, final HKItemControl item) {
         final int position = helper.getLayoutPosition();
 
         final FrameLayout frameLayout = helper.getView(R.id.hk_video_main_item_sfl_container);
@@ -70,41 +73,58 @@ public class HKMainRecyclerAdapter extends BaseQuickAdapter<HKItemControl, BaseV
 
         // 点击事件
         {
-            surfaceView.setOnClickListener(v -> {
-                if (lastClickPosition != -1) {
-                    // 设置之前的view为透明
-                    FrameLayout lastFrameLayout = (FrameLayout) getViewByPosition(lastClickPosition, R.id.hk_video_main_item_sfl_container);
-                    lastFrameLayout.setBackgroundColor(Color.TRANSPARENT);
-                }
-                // 设置当前的view为
-                frameLayout.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
-                lastClickPosition = position;
-            });
-
-            surfaceView.setOnLongClickListener(v -> {
-                new MaterialDialog.Builder(mContext)
-                        .title("提示")
-                        .content("是否关闭播放")
-                        .positiveText("关闭")
-                        .negativeText("取消")
-                        .onPositive((dialog, which) -> item.stopPlay())
-                        .show();
-                return true;
-            });
-
-            imageView.setOnClickListener(v -> {
-                // 显示选择的dialog
-                new HKVideoPlayListDialog(mContext, treeNodeList, (treeNode, visablePositon, realDatasPositon, isLeaf) -> {
-                    // 开始加载播放
-                    CameraInfo cameraInfo = null;
-                    if (treeNode.getObject() instanceof CameraInfo) {
-                        cameraInfo = (CameraInfo) treeNode.getObject();
+            surfaceView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (lastClickPosition != -1) {
+                        // 设置之前的view为透明
+                        FrameLayout lastFrameLayout = (FrameLayout) getViewByPosition(lastClickPosition, R.id.hk_video_main_item_sfl_container);
+                        lastFrameLayout.setBackgroundColor(Color.TRANSPARENT);
                     }
-                    if (cameraInfo == null) return;
-                    surfaceView.setVisibility(View.VISIBLE);
-                    imageView.setVisibility(View.GONE);
-                    item.startPlay(cameraInfo.getId(), surfaceView);
-                }).show();
+                    // 设置当前的view为
+                    frameLayout.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+                    lastClickPosition = position;
+                }
+            });
+
+            surfaceView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    new MaterialDialog.Builder(mContext)
+                            .title("提示")
+                            .content("是否关闭播放")
+                            .positiveText("关闭")
+                            .negativeText("取消")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    item.stopPlay();
+                                }
+                            })
+                            .show();
+                    return true;
+                }
+            });
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 显示选择的dialog
+                    new HKVideoPlayListDialog(mContext, treeNodeList, new TreeNodeRecyclerAdapter.OnTreeNodeSigleClickListener() {
+                        @Override
+                        public void onSigleClick(TreeNode treeNode, int visablePositon, int realDatasPositon, boolean isLeaf) {
+                            // 开始加载播放
+                            CameraInfo cameraInfo = null;
+                            if (treeNode.getObject() instanceof CameraInfo) {
+                                cameraInfo = (CameraInfo) treeNode.getObject();
+                            }
+                            if (cameraInfo == null) return;
+                            surfaceView.setVisibility(View.VISIBLE);
+                            imageView.setVisibility(View.GONE);
+                            item.startPlay(cameraInfo.getId(), surfaceView);
+                        }
+                    }).show();
+                }
             });
         }
     }
@@ -141,7 +161,7 @@ public class HKMainRecyclerAdapter extends BaseQuickAdapter<HKItemControl, BaseV
     }
 
 
-    public int getSelectedPosition(){
+    public int getSelectedPosition() {
         return lastClickPosition;
     }
 }
