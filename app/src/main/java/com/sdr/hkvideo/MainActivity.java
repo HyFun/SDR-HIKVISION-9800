@@ -34,4 +34,10 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+
+    @Override
+    protected boolean onActivityAnimate() {
+        return false;
+    }
 }

@@ -27,4 +27,10 @@ public class BaseActivityConfig extends com.sdr.lib.base.BaseActivityConfig {
         ColorDrawable drawable = new ColorDrawable(context.getResources().getColor(R.color.colorPrimary));
         return drawable;
     }
+
+
+    @Override
+    public boolean onActivityAnimation() {
+        return true;
+    }
 }
