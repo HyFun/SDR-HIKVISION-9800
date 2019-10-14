@@ -19,7 +19,7 @@ import com.sdr.hklibrary.contract.HKMainContract;
 import com.sdr.hklibrary.data.HKDataInfo;
 import com.sdr.hklibrary.data.HKHistory;
 import com.sdr.hklibrary.data.HKItemControl;
-import com.sdr.hklibrary.data.HKVideoConfig;
+import com.sdr.hklibrary.data.HKVideoListFilter;
 import com.sdr.hklibrary.presenter.HKMainPresenter;
 import com.sdr.hklibrary.support.HKVideoUtil;
 import com.sdr.lib.ui.tree.TreeNode;
@@ -199,10 +199,10 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
     public void initSuccess(List<TreeNode> treeNodeList) {
         showContentView();
         this.treeNodeList.clear();
-        // 重构
-        HKVideoConfig hkVideoConfig = SDR_HIKVISION_9800_HTTP.getInstance().getHkVideoConfig();
-        if (hkVideoConfig != null && hkVideoConfig.rebuildCameraList(treeNodeList) != null) {
-            this.treeNodeList.addAll(hkVideoConfig.rebuildCameraList(treeNodeList));
+        // 过滤摄像头列表
+        HKVideoListFilter hkVideoListFilter = SDR_HIKVISION_9800_HTTP.getInstance().getHkVideoListFilter();
+        if (hkVideoListFilter != null && hkVideoListFilter.filterCameraList(treeNodeList) != null) {
+            this.treeNodeList.addAll(hkVideoListFilter.filterCameraList(treeNodeList));
         } else {
             this.treeNodeList.addAll(treeNodeList);
         }

@@ -10,6 +10,6 @@ import java.util.List;
  * Description:
  */
 
-public interface HKVideoConfig {
-    List<TreeNode> rebuildCameraList(List<TreeNode> treeNodeList);
+public interface HKVideoListFilter {
+    List<TreeNode> filterCameraList(List<TreeNode> treeNodeList);
 }

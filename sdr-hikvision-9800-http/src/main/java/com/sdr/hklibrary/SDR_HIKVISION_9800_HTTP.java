@@ -11,7 +11,7 @@ import com.hikvision.vmsnetsdk.ServInfo;
 import com.hikvision.vmsnetsdk.VMSNetSDK;
 import com.orhanobut.logger.Logger;
 import com.sdr.hklibrary.data.HKDataInfo;
-import com.sdr.hklibrary.data.HKVideoConfig;
+import com.sdr.hklibrary.data.HKVideoListFilter;
 import com.sdr.hklibrary.ui.HKVideoMainActivity;
 import com.sdr.lib.rx.RxUtils;
 import com.sdr.lib.util.AlertUtil;
@@ -53,16 +53,6 @@ public class SDR_HIKVISION_9800_HTTP {
     public void init(Application application, final boolean debug) {
         this.application = application;
         this.debug = debug;
-    }
-
-    private HKVideoConfig hkVideoConfig;
-
-    public void setHkVideoConfig(HKVideoConfig hkVideoConfig) {
-        this.hkVideoConfig = hkVideoConfig;
-    }
-
-    public HKVideoConfig getHkVideoConfig() {
-        return hkVideoConfig;
     }
 
     public Application getApplication() {
@@ -123,6 +113,29 @@ public class SDR_HIKVISION_9800_HTTP {
         }
     }
 
+
+    // 摄像头列表过滤器
+    private HKVideoListFilter hkVideoListFilter;
+
+    public void setHkVideoListFilter(HKVideoListFilter hkVideoListFilter) {
+        this.hkVideoListFilter = hkVideoListFilter;
+    }
+
+    public HKVideoListFilter getHkVideoListFilter() {
+        return hkVideoListFilter;
+    }
+
+
+    // 是否可控
+    private boolean isControl = true;
+
+    public boolean isControl() {
+        return isControl;
+    }
+
+    public void setControl(boolean control) {
+        isControl = control;
+    }
 
     // —————————————————私有方法—————————————————
 

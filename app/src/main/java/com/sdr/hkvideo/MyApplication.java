@@ -17,5 +17,6 @@ public class MyApplication extends Application {
         super.onCreate();
         SDR_LIBRARY.register(this, new BaseActivityConfig(getApplicationContext()));
         SDR_HIKVISION_9800_HTTP.getInstance().init(this, BuildConfig.DEBUG);
+        SDR_HIKVISION_9800_HTTP.getInstance().setControl(false);
     }
 }

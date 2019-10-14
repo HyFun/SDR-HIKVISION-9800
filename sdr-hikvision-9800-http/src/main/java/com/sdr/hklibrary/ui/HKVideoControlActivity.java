@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sdr.hklibrary.R;
+import com.sdr.hklibrary.SDR_HIKVISION_9800_HTTP;
 import com.sdr.hklibrary.base.HKBaseActivity;
 import com.sdr.hklibrary.constant.HKConstants;
 import com.sdr.hklibrary.contract.HKPlayContract;
@@ -119,6 +120,21 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
     }
 
     private void initView() {
+        // 根据是否可控制动态显示按钮
+        boolean isControl = SDR_HIKVISION_9800_HTTP.getInstance().isControl();
+        if (isControl) {
+            viewTakePhoto.setVisibility(View.VISIBLE);
+            viewRecord.setVisibility(View.VISIBLE);
+            viewAudio.setVisibility(View.VISIBLE);
+            viewRemote.setVisibility(View.VISIBLE);
+        } else {
+            viewTakePhoto.setVisibility(View.GONE);
+            viewRecord.setVisibility(View.GONE);
+            viewAudio.setVisibility(View.GONE);
+            viewRemote.setVisibility(View.GONE);
+        }
+
+
         mHKItemControl = new HKItemControl(0, this);
         //mHKItemControl.startPlay(cameraId, mSurfaceView);
     }
