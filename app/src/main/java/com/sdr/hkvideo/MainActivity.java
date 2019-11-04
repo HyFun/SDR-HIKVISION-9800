@@ -1,5 +1,7 @@
 package com.sdr.hkvideo;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +24,9 @@ public class MainActivity extends BaseActivity {
         edtUserName = findViewById(R.id.main_edt_username);
         edtPassWord = findViewById(R.id.main_edt_password);
         login = findViewById(R.id.main_btn_login);
+        edtUrl.setText(getPlaceHolder("ip") + getPlaceHolder("port"));
+        edtUserName.setText(getPlaceHolder("name"));
+        edtPassWord.setText(getPlaceHolder("password"));
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -35,6 +40,15 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+
+    public String getPlaceHolder(String key) {
+        try {
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            return appInfo.metaData.getString(key);
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
     @Override
     protected boolean onActivityAnimate() {
