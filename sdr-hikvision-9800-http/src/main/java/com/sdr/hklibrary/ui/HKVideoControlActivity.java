@@ -20,7 +20,7 @@ import com.sdr.hklibrary.base.HKBaseActivity;
 import com.sdr.hklibrary.constant.HKConstants;
 import com.sdr.hklibrary.contract.HKPlayContract;
 import com.sdr.hklibrary.data.HKItemControl;
-import com.sdr.lib.rx.RxUtils;
+import com.sdr.lib.rx.RxUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
@@ -307,10 +307,10 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
                     @Override
                     public ObservableSource<Boolean> apply(Integer integer) throws Exception {
                         mHKItemControl.stopPlaySyn();
-                        return RxUtils.createData(true);
+                        return RxUtil.createData(true);
                     }
                 })
-                .compose(RxUtils.io_main())
+                .compose(RxUtil.io_main())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object object) throws Exception {
@@ -326,7 +326,7 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
      */
     private void sendCtrlCmd(int cmd) {
         if (mHKItemControl.getCurrentStatus() == HKConstants.PlayStatus.LIVE_INIT) {
-            showErrorToast("视频没有正在播放，无法控制");
+            showErrorMsg("视频没有正在播放，无法控制", "");
             return;
         }
         mHKItemControl.sendCtrlCmd(cmd);
@@ -347,9 +347,9 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
                                     @Override
                                     public ObservableSource<Boolean> apply(Integer integer) throws Exception {
                                         mHKItemControl.stopPlaySyn();
-                                        return RxUtils.createData(true);
+                                        return RxUtil.createData(true);
                                     }
-                                }).compose(RxUtils.io_main())
+                                }).compose(RxUtil.io_main())
                                 .subscribe(new Consumer<Object>() {
                                     @Override
                                     public void accept(Object object) throws Exception {
@@ -374,35 +374,35 @@ public class HKVideoControlActivity extends HKBaseActivity implements HKPlayCont
             // 停止成功
         } else if (code == HKConstants.PlayLive.PLAY_LIVE_FAILED || code == HKConstants.PlayLive.PLAY_LIVE_RTSP_FAIL) {
             // 播放失败
-            showErrorMsg(msg);
+            showErrorMsg("播放失败", msg);
         } else if (code == HKConstants.PlayLive.SEND_CTRL_CMD_SUCCESS) {
             // 指令执行成功
-            showSuccessToast(msg);
+            showSuccessMsg(msg, "");
         } else if (code == HKConstants.PlayLive.SEND_CTRL_CMD_FAILED) {
             // 指令执行失败
-            showErrorToast(msg);
+            showErrorMsg(msg, "");
         } else if (code == HKConstants.PlayLive.CAPTURE_SUCCESS) {
             sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(msg))));
-            showSuccessToast(msg);
+            showSuccessMsg(msg, "");
         } else if (code == HKConstants.PlayLive.CAPTURE_FAILED) {
-            showErrorToast(msg);
+            showErrorMsg(msg, "");
         } else if (code == HKConstants.PlayLive.RECORD_START) {
-            showNormalToast("开始录像");
+            showNormalMsg("开始录像", "");
             rbControlRecord.setChecked(true);
         } else if (code == HKConstants.PlayLive.RECORD_SUCCESS) {
-            showSuccessToast(msg);
+            showSuccessMsg(msg, "");
             rbControlRecord.setChecked(false);
         } else if (code == HKConstants.PlayLive.RECORD_FAILED) {
-            showErrorToast(msg);
+            showErrorMsg(msg, "");
             rbControlRecord.setChecked(false);
         } else if (code == HKConstants.PlayLive.AUDIO_FAILED) {
-            showErrorToast(msg);
+            showErrorMsg(msg, "");
             rbControlAudio.setChecked(false);
         } else if (code == HKConstants.PlayLive.AUDIO_SUCCESS) {
-            showSuccessToast(msg);
+            showSuccessMsg(msg, "");
             rbControlAudio.setChecked(true);
         } else if (code == HKConstants.PlayLive.AUDIO_CLOSE_SUCCESS) {
-            showSuccessToast(msg);
+            showSuccessMsg(msg, "");
             rbControlAudio.setChecked(false);
         }
     }

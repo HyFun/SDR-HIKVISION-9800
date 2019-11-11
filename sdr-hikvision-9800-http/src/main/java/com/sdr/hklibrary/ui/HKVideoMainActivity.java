@@ -96,7 +96,7 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
                 // 获取历史记录
                 final HKHistory hkHistory = (HKHistory) HKVideoUtil.getHkACache().getAsObject(HKConstants.HIK_HISTORY);
                 if (hkHistory == null || hkHistory.getCameraInfoList().isEmpty()) {
-                    showErrorMsg("没有浏览历史记录");
+                    showErrorMsg("没有浏览历史记录","");
                     return;
                 }
                 // 有历史记录  开启预览
@@ -120,7 +120,7 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
                     // 正在播放的时候才方法
                     HKVideoControlActivity.startHKVideoControlActivity(getActivity(), mainRecyclerAdapter.getData().get(mainRecyclerAdapter.getSelectedPosition()).getCameraID());
                 } else {
-                    showErrorMsg("请选择一个正在播放的窗口");
+                    showErrorMsg("请选择一个正在播放的窗口","");
                 }
             }
         });
@@ -210,7 +210,7 @@ public class HKVideoMainActivity extends HKBaseActivity<HKMainPresenter> impleme
 
     @Override
     public void initFailed(String message) {
-        showErrorMsg(message);
+        showErrorMsg(message,"");
         finish();
     }
 

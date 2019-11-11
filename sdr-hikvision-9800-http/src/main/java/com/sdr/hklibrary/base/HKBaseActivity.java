@@ -46,32 +46,17 @@ public class HKBaseActivity<T extends AbstractPresenter> extends com.sdr.lib.bas
     }
 
     @Override
-    public void showSuccessMsg(String s) {
-        AlertUtil.showPositiveToastTop(s);
+    public void showSuccessMsg(String msg, String content) {
+        AlertUtil.showPositiveToastTop(msg, content);
     }
 
     @Override
-    public void showErrorMsg(String s) {
-        AlertUtil.showNegativeToastTop(s);
+    public void showErrorMsg(String msg, String content) {
+        AlertUtil.showNegativeToastTop(msg, content);
     }
 
     @Override
-    public void showNormalMsg(String s) {
-        AlertUtil.showNormalToastTop(s);
-    }
-
-    @Override
-    public void showSuccessToast(String s) {
-        AlertUtil.showPositiveToast(s);
-    }
-
-    @Override
-    public void showErrorToast(String s) {
-        AlertUtil.showNegativeToast(s);
-    }
-
-    @Override
-    public void showNormalToast(String s) {
-        AlertUtil.showNormalToast(s);
+    public void showNormalMsg(String msg, String content) {
+        AlertUtil.showNormalToastTop(msg, content);
     }
 }

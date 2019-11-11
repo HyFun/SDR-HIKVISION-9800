@@ -49,9 +49,4 @@ public class MainActivity extends BaseActivity {
             return "";
         }
     }
-
-    @Override
-    protected boolean onActivityAnimate() {
-        return false;
-    }
 }

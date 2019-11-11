@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
 
-        <item name="android:windowAnimationStyle">@style/ActivitySlideAnimation</item>
+        <item name="android:windowAnimationStyle">@style/default_animation</item>
     </style>
 
 

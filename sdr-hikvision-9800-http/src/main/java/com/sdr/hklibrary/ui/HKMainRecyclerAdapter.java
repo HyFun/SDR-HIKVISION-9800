@@ -156,7 +156,7 @@ public class HKMainRecyclerAdapter extends BaseQuickAdapter<HKItemControl, BaseV
             surfaceView.setVisibility(View.GONE);
             imageView.setVisibility(View.VISIBLE);
             // 播放失败
-            view.showErrorMsg("第" + (position + 1) + "个位置" + msg);
+            view.showErrorMsg("播放失败", "第" + (position + 1) + "个位置" + msg);
         }
     }
 

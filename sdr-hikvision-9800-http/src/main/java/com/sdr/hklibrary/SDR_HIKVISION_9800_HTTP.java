@@ -13,7 +13,7 @@ import com.orhanobut.logger.Logger;
 import com.sdr.hklibrary.data.HKDataInfo;
 import com.sdr.hklibrary.data.HKVideoListFilter;
 import com.sdr.hklibrary.ui.HKVideoMainActivity;
-import com.sdr.lib.rx.RxUtils;
+import com.sdr.lib.rx.RxUtil;
 import com.sdr.lib.util.AlertUtil;
 
 import io.reactivex.Observable;
@@ -90,13 +90,13 @@ public class SDR_HIKVISION_9800_HTTP {
                                 RtspClient.initLib();
                                 MCRSDK.setPrint(1, null);
                                 VMSNetSDK.getInstance().openLog(debug);
-                                return RxUtils.createData(true);
+                                return RxUtil.createData(true);
                             } catch (Exception e) {
                                 return Observable.error(e);
                             }
                         }
                     })
-                    .compose(RxUtils.io_main())
+                    .compose(RxUtil.io_main())
                     .subscribe(new Consumer<Object>() {
                         @Override
                         public void accept(Object object) throws Exception {
@@ -107,7 +107,7 @@ public class SDR_HIKVISION_9800_HTTP {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             Logger.e(throwable, throwable.getMessage());
-                            AlertUtil.showNegativeToastTop("海康视频库文件加载失败");
+                            AlertUtil.showNegativeToastTop("海康视频库文件加载失败", "");
                         }
                     });
         }

@@ -17,7 +17,7 @@ import com.orhanobut.logger.Logger;
 import com.sdr.hklibrary.constant.HKConstants;
 import com.sdr.hklibrary.contract.HKPlayContract;
 import com.sdr.hklibrary.util.UtilSDCard;
-import com.sdr.lib.rx.RxUtils;
+import com.sdr.lib.rx.RxUtil;
 import com.sdr.lib.util.HttpUtil;
 
 import org.MediaPlayer.PlayM4.Player;
@@ -117,7 +117,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
         this.mSurfaceView = surfaceView;
         // 显示加载框
         Observable.just(0)
-                .compose(RxUtils.io_main())
+                .compose(RxUtil.io_main())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object object) throws Exception {
@@ -170,10 +170,10 @@ public class HKItemControl implements HKPlayContract.Presenter,
                             int errorCode = mRtspHandler.getLastError();
                             return Observable.error(new Exception("startRtsp():: errorCode is R" + errorCode));
                         }
-                        return RxUtils.createData(ret);
+                        return RxUtil.createData(ret);
                     }
                 })
-                .compose(RxUtils.io_main())
+                .compose(RxUtil.io_main())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object object) throws Exception {
@@ -200,7 +200,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
         }
         // 显示加载框
         Observable.just(0)
-                .compose(RxUtils.io_main())
+                .compose(RxUtil.io_main())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object integer) throws Exception {
@@ -213,13 +213,13 @@ public class HKItemControl implements HKPlayContract.Presenter,
                     public ObservableSource<Boolean> apply(Integer integer) throws Exception {
                         try {
                             stopPlaySyn();
-                            return RxUtils.createData(true);
+                            return RxUtil.createData(true);
                         } catch (Exception e) {
                             return Observable.error(e);
                         }
                     }
                 })
-                .compose(RxUtils.io_main())
+                .compose(RxUtil.io_main())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object object) throws Exception {
@@ -273,10 +273,10 @@ public class HKItemControl implements HKPlayContract.Presenter,
                         if (!ret) {
                             return Observable.error(new Exception("指令执行失败"));
                         }
-                        return RxUtils.createData(ret);
+                        return RxUtil.createData(ret);
                     }
                 })
-                .compose(RxUtils.io_main())
+                .compose(RxUtil.io_main())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object object) throws Exception {
@@ -309,9 +309,9 @@ public class HKItemControl implements HKPlayContract.Presenter,
                         if (!ret) {
                             return Observable.error(new Exception("停止控制失败"));
                         }
-                        return RxUtils.createData(ret);
+                        return RxUtil.createData(ret);
                     }
-                }).compose(RxUtils.io_main())
+                }).compose(RxUtil.io_main())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object object) throws Exception {
@@ -736,7 +736,7 @@ public class HKItemControl implements HKPlayContract.Presenter,
                 boolean ret = processStreamHeader(data, length);
                 if (!ret) {
                     Observable.just(0)
-                            .compose(RxUtils.io_main())
+                            .compose(RxUtil.io_main())
                             .subscribe(new Consumer<Object>() {
                                 @Override
                                 public void accept(Object object) throws Exception {

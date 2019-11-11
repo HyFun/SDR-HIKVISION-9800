@@ -3,7 +3,7 @@ package com.sdr.hklibrary.support;
 import com.sdr.hklibrary.SDR_HIKVISION_9800_HTTP;
 import com.sdr.hklibrary.constant.HKConstants;
 import com.sdr.hklibrary.data.HKItemControl;
-import com.sdr.lib.rx.RxUtils;
+import com.sdr.lib.rx.RxUtil;
 import com.sdr.lib.support.ACache;
 
 import java.util.ArrayList;
@@ -55,9 +55,9 @@ public class HKVideoUtil {
                         for (HKItemControl item : hkItemControlList) {
                             item.stopPlaySyn();
                         }
-                        return RxUtils.createData(true);
+                        return RxUtil.createData(true);
                     }
                 })
-                .compose(RxUtils.<Boolean>io_main());
+                .compose(RxUtil.<Boolean>io_main());
     }
 }

@@ -11,10 +11,9 @@ import android.graphics.drawable.Drawable;
  */
 
 public class BaseActivityConfig extends com.sdr.lib.base.BaseActivityConfig {
-    private Context context;
 
     public BaseActivityConfig(Context context) {
-        this.context = context;
+        super(context);
     }
 
     @Override
@@ -28,9 +27,4 @@ public class BaseActivityConfig extends com.sdr.lib.base.BaseActivityConfig {
         return drawable;
     }
 
-
-    @Override
-    public boolean onActivityAnimation() {
-        return true;
-    }
 }

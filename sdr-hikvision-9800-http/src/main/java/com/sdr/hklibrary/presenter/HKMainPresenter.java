@@ -5,7 +5,7 @@ import com.hikvision.vmsnetsdk.VMSNetSDK;
 import com.sdr.hklibrary.base.HKBasePresenter;
 import com.sdr.hklibrary.contract.HKMainContract;
 import com.sdr.hklibrary.support.HKResourceHelper;
-import com.sdr.lib.rx.RxUtils;
+import com.sdr.lib.rx.RxUtil;
 import com.sdr.lib.ui.tree.TreeNode;
 import com.sdr.lib.util.HttpUtil;
 
@@ -46,7 +46,7 @@ public class HKMainPresenter extends HKBasePresenter<HKMainContract.View> implem
                         // 登录
                         boolean ret = VMSNetSDK.getInstance().login(url, userName, passWord, macAddr, servInfo, HttpUtil.clearDomainAddress(url));
                         if (ret) {
-                            return RxUtils.createData(ret);
+                            return RxUtil.createData(ret);
                         } else {
                             return Observable.error(new Exception(VMSNetSDK.getInstance().getLastErrorCode() + "，登录失败"));
                         }
@@ -57,10 +57,10 @@ public class HKMainPresenter extends HKBasePresenter<HKMainContract.View> implem
                     public ObservableSource<List<TreeNode>> apply(Boolean aBoolean) throws Exception {
                         HKResourceHelper resourceHelper = new HKResourceHelper(url, servInfo);
                         resourceHelper.start();
-                        return RxUtils.createData(resourceHelper.getTreeNodeList());
+                        return RxUtil.createData(resourceHelper.getTreeNodeList());
                     }
                 })
-                .compose(RxUtils.io_main())
+                .compose(RxUtil.io_main())
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object object) throws Exception {
